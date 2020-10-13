@@ -420,8 +420,6 @@ class DAO
             $req->closeCursor();
             
             return $lesUtilisateurs;
-            
-            
         }
     }
     
@@ -430,32 +428,8 @@ class DAO
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
     
-    // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
-    // modifié par Jim le 27/12/2017
-    public function autoriseAConsulter($idAutorisant, $idAutorise) {
-        // préparation de la requête de recherche
-        $txt_req = "Select idAutorise, idAutorisant from tracegps_autorisations where idAutorise = :idAutorise AND idAutorisant = :idAutorisant";
-        $req = $this->cnx->prepare($txt_req);
-        // liaison de la requête et de ses paramètres
-        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
-        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
-        // exécution de la requête
-        $req->execute();
-        
-        $nbReponses = $req->fetchColumn(0);
-        // libère les ressources du jeu de données
-        $req->closeCursor();
-        
-        // fourniture de la réponse
-        if ($nbReponses == 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
     
+
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
     // --------------------------------------------------------------------------------------
@@ -466,7 +440,32 @@ class DAO
     // début de la zone attribuée au développeur 4 (Monorom Lao) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
     
-    
+    // enregistre l'utilisateur $unUtilisateur dans la bdd
+    // fournit true si l'enregistrement s'est bien effectué, false sinon
+    // met à jour l'objet $unUtilisateur avec l'id (auto_increment) attribué par le SGBD
+    // modifié par Monorom le 13/10/2020
+    public function creerUneAutorisation($idAutorisant, $idAutorise) {
+        // on teste si l'utilisateur existe déjà
+        if ($this->existePseudoUtilisateur($idAutorisant->getPseudo())) return false;
+        
+        // préparation de la requête
+        $txt_req1 = "insert into tracegps_autorisations (idAutorisant, idAutorise)";
+        $txt_req1 .= " values (:idAutorisant, :idAutorise)";
+        $req1 = $this->cnx->prepare($txt_req1);
+        // liaison de la requête et de ses paramètres
+        $req1->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
+        $req1->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
+
+        // exécution de la requête
+        $ok = $req1->execute();
+        // sortir en cas d'échec
+        if ( ! $ok) {return false; }
+
+        // recherche de l'identifiant (auto_increment) qui a été attribué à la trace
+        $unId = $this->cnx->lastInsertId();
+        $unUtilisateur->setId($unId);
+        return true;
+    }
     
 } // fin de la classe DAO
 
