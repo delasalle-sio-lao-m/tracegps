@@ -428,7 +428,6 @@ class DAO
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
     
-<<<<<<< HEAD
     // enregistre l'utilisateur $unUtilisateur dans la bdd
     // fournit true si l'enregistrement s'est bien effectué, false sinon
     // met à jour l'objet $unUtilisateur avec l'id (auto_increment) attribué par le SGBD
@@ -455,12 +454,6 @@ class DAO
         $unUtilisateur->setId($unId);
         return true;
     }
-
-
-
-
-
-=======
     
     
     // --------------------------------------------------------------------------------------
@@ -474,7 +467,6 @@ class DAO
     // --------------------------------------------------------------------------------------
     
     
->>>>>>> branch 'master' of https://github.com/delasalle-sio-lao-m/tracegps.git
     
 } // fin de la classe DAO
 
