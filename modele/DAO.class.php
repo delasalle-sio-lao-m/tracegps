@@ -420,14 +420,24 @@ class DAO
             $req->closeCursor();
             
             return $lesUtilisateurs;
-            
-            
         }
     }
     
     
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
+    // --------------------------------------------------------------------------------------
+    
+    
+
+    // --------------------------------------------------------------------------------------
+    // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
+    // --------------------------------------------------------------------------------------
+    
+    
+    
+    // --------------------------------------------------------------------------------------
+    // début de la zone attribuée au développeur 4 (Monorom Lao) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
     
     // enregistre l'utilisateur $unUtilisateur dans la bdd
@@ -443,14 +453,14 @@ class DAO
         $txt_req1 .= " values (:idAutorisant, :idAutorise)";
         $req1 = $this->cnx->prepare($txt_req1);
         // liaison de la requête et de ses paramètres
-        $req1->bindValue("idAutorisant", utf8_decode($idAutorisant->getPseudo()), PDO::PARAM_STR);
-        $req1->bindValue("idAutorise", utf8_decode($idAutorise->getAdrmail()), PDO::PARAM_STR);
+        $req1->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
+        $req1->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
 
         // exécution de la requête
         $ok = $req1->execute();
         // sortir en cas d'échec
-        if ( ! $ok) { return false; }
-        
+        if ( ! $ok) {return false; }
+
         // recherche de l'identifiant (auto_increment) qui a été attribué à la trace
         $unId = $this->cnx->lastInsertId();
         $unUtilisateur->setId($unId);
