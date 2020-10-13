@@ -73,7 +73,11 @@ if ($unUtilisateur) {
 else {
     echo "<p>L'utilisateur admon n'existe pas !</p>";
 }
+<<<<<<< HEAD
 */
+
+/*
+>>>>>>> branch 'master' of https://github.com/delasalle-sio-lao-m/tracegps.git
 
 /*
 // test de la méthode getTousLesUtilisateurs ------------------------------------------------------
