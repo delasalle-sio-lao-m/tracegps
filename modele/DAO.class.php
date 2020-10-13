@@ -136,6 +136,29 @@ class DAO
         }
     }
     
+    // fournit true si le pseudo $pseudo existe dans la table tracegps_utilisateurs, false sinon
+    // modifié par Jim le 27/12/2017
+    public function existeAdrMailUtilisateur($adrMail) {
+        // préparation de la requête de recherche
+        $txt_req = "Select count(*) from tracegps_utilisateurs where adrMail = :adrMail";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("adrMail", $adrMail, PDO::PARAM_STR);
+        // exécution de la requête
+        $req->execute();
+        $nbReponses = $req->fetchColumn(0);
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        
+        // fourniture de la réponse
+        if ($nbReponses == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
     
     // fournit un objet Utilisateur à partir de son pseudo $pseudo
     // fournit la valeur null si le pseudo n'existe pas
