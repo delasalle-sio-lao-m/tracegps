@@ -30,7 +30,7 @@
 include_once ('DAO.class.php');
 $dao = new DAO();
 
-
+/*
 // test de la méthode existeAdrMailUtilisateur -----------------------------------------------------
 echo "<h3>Test de existeAdrMailUtilisateur : </h3>";
 if ($dao->existeAdrMailUtilisateur("delasalle.sio.lao.m@gmail.com")) $existe = "oui"; else $existe = "non";
@@ -39,6 +39,20 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouan.t@gmail.com")) $existe =
 echo "Existence de l'utilisateur 'delasalle.sio.jouan.t@gmail.com' : <b>" . $existe . "</b></br>";
 if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouant.t@gmail.com")) $existe = "oui"; else $existe = "non";
 echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $existe . "</b></p>";
+*/
+
+
+// test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
+$lesUtilisateurs = $dao->getLesUtilisateursAutorisant(4);
+$nbReponses = sizeof($lesUtilisateurs);
+echo "<p>Nombre d'utilisateurs autorisant l'utilisateur 4 à voir leurs parcours : " . $nbReponses . "</p>";
+// affichage des utilisateurs
+foreach ($lesUtilisateurs as $unUtilisateur)
+{   echo ($unUtilisateur->toString());
+echo ('<br>');
+}
 
 
 

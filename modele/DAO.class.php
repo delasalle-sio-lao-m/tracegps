@@ -1,4 +1,4 @@
-// <?php
+<?php
 // Projet TraceGPS
 // fichier : modele/DAO.class.php   (DAO : Data Access Object)
 // Rôle : fournit des méthodes d'accès à la bdd tracegps (projet TraceGPS) au moyen de l'objet PDO
@@ -136,28 +136,7 @@ class DAO
         }
     }
     
-    // fournit true si le pseudo $pseudo existe dans la table tracegps_utilisateurs, false sinon
-    // modifié par Jim le 27/12/2017
-    public function existeAdrMailUtilisateur($adrMail) {
-        // préparation de la requête de recherche
-        $txt_req = "Select count(*) from tracegps_utilisateurs where adrMail = :adrMail";
-        $req = $this->cnx->prepare($txt_req);
-        // liaison de la requête et de ses paramètres
-        $req->bindValue("adrMail", $adrMail, PDO::PARAM_STR);
-        // exécution de la requête
-        $req->execute();
-        $nbReponses = $req->fetchColumn(0);
-        // libère les ressources du jeu de données
-        $req->closeCursor();
-        
-        // fourniture de la réponse
-        if ($nbReponses == 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
+
     
     
     // fournit un objet Utilisateur à partir de son pseudo $pseudo
@@ -197,6 +176,12 @@ class DAO
             return $unUtilisateur;
         }
     }
+    
+    
+
+    
+    
+    
     
     
     // fournit la collection  de tous les utilisateurs (de niveau 1)
@@ -364,612 +349,88 @@ class DAO
     
     
     
-    
-    
     // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 1 (xxxxxxxxxxxxxxxxxxxx) : lignes 350 à 549
+    // début de la zone attribuée au développeur 1 (Theo Jouan) : lignes 350 à 549
     // --------------------------------------------------------------------------------------
     
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 2 (xxxxxxxxxxxxxxxxxxxx) : lignes 550 à 749
-    // --------------------------------------------------------------------------------------
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 3 (xxxxxxxxxxxxxxxxxxxx) : lignes 750 à 949
-    // --------------------------------------------------------------------------------------
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    // fournit true si le pseudo $pseudo existe dans la table tracegps_utilisateurs, false sinon
+    // modifié par Jim le 27/12/2017
+    public function existeAdrMailUtilisateur($adrMail) {
+        // préparation de la requête de recherche
+        $txt_req = "Select count(*) from tracegps_utilisateurs where adrMail = :adrMail";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("adrMail", $adrMail, PDO::PARAM_STR);
+        // exécution de la requête
+        $req->execute();
+        $nbReponses = $req->fetchColumn(0);
+        // libère les ressources du jeu de données
+        $req->closeCursor();
         
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        // fourniture de la réponse
+        if ($nbReponses == 0) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
     
    
+    public function getLesUtilisateursAutorisant($idUtilisateur) {
+        // préparation de la requête de recherche
+        $txt_req = "Select distinct  id, pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation, nbTraces, dateDerniereTrace";
+        $txt_req .= " FROM tracegps_vue_utilisateurs INNER JOIN tracegps_autorisations";
+        $txt_req .= " ON id = idAutorisant";
+        $txt_req .= " where idAutorisant IN ( SELECT idAutorisant FROM tracegps_autorisations WHERE idAutorise = :idAutorise)";
+        $txt_req .= " order by id";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idAutorise", $idUtilisateur, PDO::PARAM_STR);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        $lesUtilisateurs =array();
+        // libère les ressources du jeu de données
+        
+        
+        // traitement de la réponse
+        if ( ! $uneLigne) {
+            return null;
+        }
+        else {
+            while ($uneLigne) {
+                // création d'un objet Utilisateur
+                $unId = utf8_encode($uneLigne->id);
+                $unPseudo = utf8_encode($uneLigne->pseudo);
+                $unMdpSha1 = utf8_encode($uneLigne->mdpSha1);
+                $uneAdrMail = utf8_encode($uneLigne->adrMail);
+                $unNumTel = utf8_encode($uneLigne->numTel);
+                $unNiveau = utf8_encode($uneLigne->niveau);
+                $uneDateCreation = utf8_encode($uneLigne->dateCreation);
+                $unNbTraces = utf8_encode($uneLigne->nbTraces);
+                $uneDateDerniereTrace = utf8_encode($uneLigne->dateDerniereTrace);
+                
+                $unUtilisateur = new Utilisateur($unId, $unPseudo, $unMdpSha1, $uneAdrMail, $unNumTel, $unNiveau, $uneDateCreation, $unNbTraces, $uneDateDerniereTrace);
+                
+                $lesUtilisateurs[] = $unUtilisateur;
+                $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+                
+            }
+            $req->closeCursor();
+            
+            return $lesUtilisateurs;
+            
+            
+        }
+    }
+    
+    
     // --------------------------------------------------------------------------------------
-    // début de la zone attribuée au développeur 4 (xxxxxxxxxxxxxxxxxxxx) : lignes 950 à 1150
+    // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
     
+<<<<<<< HEAD
     // enregistre l'utilisateur $unUtilisateur dans la bdd
     // fournit true si l'enregistrement s'est bien effectué, false sinon
     // met à jour l'objet $unUtilisateur avec l'id (auto_increment) attribué par le SGBD
@@ -1001,6 +462,21 @@ class DAO
 
 
 
+=======
+    
+    
+    // --------------------------------------------------------------------------------------
+    // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
+    // --------------------------------------------------------------------------------------
+    
+    
+    
+    // --------------------------------------------------------------------------------------
+    // début de la zone attribuée au développeur 4 (Monorom Lao) : lignes 950 à 1150
+    // --------------------------------------------------------------------------------------
+    
+    
+>>>>>>> branch 'master' of https://github.com/delasalle-sio-lao-m/tracegps.git
     
 } // fin de la classe DAO
 

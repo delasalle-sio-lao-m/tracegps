@@ -36,8 +36,6 @@ $niveau = $dao->getNiveauConnexion("toto", sha1("mdputilisateur"));
 echo "<p>Niveau de ('toto', 'mdputilisateur') : " . $niveau . "</br>";
 
 
-
-
 // test de la méthode existePseudoUtilisateur -----------------------------------------------------
 // modifié par Jim le 12/8/2018
 echo "<h3>Test de existePseudoUtilisateur : </h3>";
