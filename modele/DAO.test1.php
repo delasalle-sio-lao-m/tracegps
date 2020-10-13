@@ -41,7 +41,7 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouant.t@gmail.com")) $existe 
 echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $existe . "</b></p>";
 */
 
-/*
+
 // test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
 // modifié par Jim le 13/8/2018
 echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
@@ -53,7 +53,7 @@ foreach ($lesUtilisateurs as $unUtilisateur)
 {   echo ($unUtilisateur->toString());
 echo ('<br>');
 }
-*/
+
 
 // test de la méthode getLesPointsDeTrace ---------------------------------------------------------
 // modifié par Jim le 13/8/2018
