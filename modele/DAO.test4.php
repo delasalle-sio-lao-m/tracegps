@@ -31,14 +31,14 @@ include_once ('DAO.class.php');
 $dao = new DAO();
 
 
-// test de la méthode xxxxxxxxxxxxxxxxxxxxxxxxxxx ----------------------------------------------------------
-// modifié par xxxxxxxxxxxxxxxxx le xxxxxxxxxx
-echo "<h3>Test de xxxxxxxxxxxxxxxxx : </h3>";
-// A CONTINUER .........
-
-
-
-
+// test de la méthode creerUneAutorisation ----------------------------------------------------------
+// modifié par Monorom LAO le 13/10/2020
+echo "<h3>Test de creerUneAutorisation : </h3>";
+if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+// la même autorisation ne peut pas être enregistrée 2 fois
+if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
 
 
