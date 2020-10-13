@@ -355,7 +355,6 @@ class DAO
     // début de la zone attribuée au développeur 1 (xxxxxxxxxxxxxxxxxxxx) : lignes 350 à 549
     // --------------------------------------------------------------------------------------
     
-    
     // fournit true si le pseudo $pseudo existe dans la table tracegps_utilisateurs, false sinon
     // modifié par Jim le 27/12/2017
     public function existeAdrMailUtilisateur($adrMail) {
