@@ -41,7 +41,7 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouant.t@gmail.com")) $existe 
 echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $existe . "</b></p>";
 */
 
-
+/*
 // test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
 // modifié par Jim le 13/8/2018
 echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
@@ -51,6 +51,19 @@ echo "<p>Nombre d'utilisateurs autorisant l'utilisateur 4 à voir leurs parcours
 // affichage des utilisateurs
 foreach ($lesUtilisateurs as $unUtilisateur)
 {   echo ($unUtilisateur->toString());
+echo ('<br>');
+}
+*/
+
+// test de la méthode getLesPointsDeTrace ---------------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesPointsDeTrace : </h3>";
+$lesPoints = $dao->getLesPointsDeTrace(1);
+$nbPoints = sizeof($lesPoints);
+echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
+// affichage des points
+foreach ($lesPoints as $unPoint)
+{   echo ($unPoint->toString());
 echo ('<br>');
 }
 
