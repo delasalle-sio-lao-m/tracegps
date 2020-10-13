@@ -42,6 +42,20 @@ echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $ex
 */
 
 
+// test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
+$lesUtilisateurs = $dao->getLesUtilisateursAutorisant(4);
+$nbReponses = sizeof($lesUtilisateurs);
+echo "<p>Nombre d'utilisateurs autorisant l'utilisateur 4 à voir leurs parcours : " . $nbReponses . "</p>";
+// affichage des utilisateurs
+foreach ($lesUtilisateurs as $unUtilisateur)
+{   echo ($unUtilisateur->toString());
+echo ('<br>');
+}
+
+
+
 
 
 
