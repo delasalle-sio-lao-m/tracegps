@@ -970,29 +970,34 @@ class DAO
     // début de la zone attribuée au développeur 4 (xxxxxxxxxxxxxxxxxxxx) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    // enregistre l'utilisateur $unUtilisateur dans la bdd
+    // fournit true si l'enregistrement s'est bien effectué, false sinon
+    // met à jour l'objet $unUtilisateur avec l'id (auto_increment) attribué par le SGBD
+    // modifié par Monorom le 13/10/2020
+    public function creerUneAutorisation($idAutorisant, $idAutorise) {
+        // on teste si l'utilisateur existe déjà
+        if ($this->existePseudoUtilisateur($idAutorisant->getPseudo())) return false;
+        
+        // préparation de la requête
+        $txt_req1 = "insert into tracegps_autorisations (idAutorisant, idAutorise)";
+        $txt_req1 .= " values (:idAutorisant, :idAutorise)";
+        $req1 = $this->cnx->prepare($txt_req1);
+        // liaison de la requête et de ses paramètres
+        $req1->bindValue("idAutorisant", utf8_decode($idAutorisant->getPseudo()), PDO::PARAM_STR);
+        $req1->bindValue("idAutorise", utf8_decode($idAutorise->getAdrmail()), PDO::PARAM_STR);
+
+        // exécution de la requête
+        $ok = $req1->execute();
+        // sortir en cas d'échec
+        if ( ! $ok) { return false; }
+        
+        // recherche de l'identifiant (auto_increment) qui a été attribué à la trace
+        $unId = $this->cnx->lastInsertId();
+        $unUtilisateur->setId($unId);
+        return true;
+    }
+
+
 
 
 
