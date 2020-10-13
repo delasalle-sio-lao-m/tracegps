@@ -420,8 +420,6 @@ class DAO
             $req->closeCursor();
             
             return $lesUtilisateurs;
-            
-            
         }
     }
     
