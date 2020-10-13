@@ -2,7 +2,7 @@
 // Projet TraceGPS
 // fichier : modele/DAO.test1.php
 // Rôle : test de la classe DAO.class.php
-// Dernière mise à jour : xxxxxxxxxxxxxxxxx par xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// Dernière mise à jour : 13/10/2020 par Theo Jouan
 
 // Le code des tests restant à développer va être réparti entre les membres de l'équipe de développement.
 // Afin de limiter les conflits avec GitHub, il est décidé d'attribuer un fichier de test à chaque développeur.
@@ -30,7 +30,7 @@
 include_once ('DAO.class.php');
 $dao = new DAO();
 
-/*
+
 // test de la méthode existeAdrMailUtilisateur -----------------------------------------------------
 echo "<h3>Test de existeAdrMailUtilisateur : </h3>";
 if ($dao->existeAdrMailUtilisateur("delasalle.sio.lao.m@gmail.com")) $existe = "oui"; else $existe = "non";
@@ -39,7 +39,7 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouan.t@gmail.com")) $existe =
 echo "Existence de l'utilisateur 'delasalle.sio.jouan.t@gmail.com' : <b>" . $existe . "</b></br>";
 if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouant.t@gmail.com")) $existe = "oui"; else $existe = "non";
 echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $existe . "</b></p>";
-*/
+
 
 
 
