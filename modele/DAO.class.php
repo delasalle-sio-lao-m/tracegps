@@ -479,6 +479,41 @@ class DAO
     }
     */
     
+    // fournit un objet Utilisateur à partir de son login
+    // fournit la valeur null si le login n'existe pas
+    public function getLesPointsDeTrace($unId) {
+        // préparation de la requête de recherche
+        $txt_req = "Select idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio";
+        $txt_req .= " from tracegps_points";
+        $txt_req .= " where idTrace = '" . $unId . "'";
+        $req = $this->cnx->prepare($txt_req);
+        
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        
+        // traitement de la réponse
+        if ( ! $uneLigne) {
+            return null;
+        }
+        else {
+            // création d'un objet Utilisateur
+            $unIdTrace = utf8_encode($uneLigne->idTrace);
+            $unId = utf8_encode($uneLigne->id);
+            $uneLatitude = utf8_encode($uneLigne->latitude);
+            $uneLongitude = utf8_encode($uneLigne->longitude);
+            $uneAltitude = utf8_encode($uneLigne->altitude);
+            $uneDateHeure = utf8_encode($uneLigne->dateHeure);
+            $unRythmeCardio = utf8_encode($uneLigne->rythmeCardio);
+            
+            
+            $unUtilisateur = new Utilisateur($unIdTrace, $unId, $uneLatitude, $uneLongitude, $uneAltitude, $uneDateHeure, $unRythmeCardio);
+            return $unUtilisateur;
+        }
+    }
     
 
     // --------------------------------------------------------------------------------------
