@@ -433,7 +433,7 @@ class DAO
         $req->bindValue("id", $id, PDO::PARAM_STR);
         // extraction des données
         $req->execute();
-        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ); 
         
         
         // traitement de la réponse
