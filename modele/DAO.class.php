@@ -782,12 +782,12 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         
-        // construction d'une collection d'objets Utilisateur
+        // construction d'une collection d'objets lesTraces
         $lesTraces = array();
         $lesPoints = array();
         // tant qu'une ligne est trouvée :
         while ($uneLigne) {
-            // création d'un objet Utilisateur
+            // création d'un objet uneTrace
             $unId = utf8_encode($uneLigne->id);
             $uneDateDebut = utf8_encode($uneLigne->dateDebut);
             $uneDateFin = utf8_encode($uneLigne->dateFin);
@@ -802,7 +802,7 @@ class DAO
             foreach($lesPoints as $leNouveauPoint){
                 $uneTrace->ajouterPoint($leNouveauPoint);
             }
-            // ajout de l'utilisateur à la collection
+            // ajout d'une trace à la collection
             $lesTraces[] = $uneTrace;
             // extrait la ligne suivante
             $uneLigne = $req->fetch(PDO::FETCH_OBJ);
