@@ -564,11 +564,11 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         
-        // construction d'une collection d'objets Utilisateur
+        // construction d'une collection d'objets lesPointsDeTrace
         $lesPointsDeTrace = array();
         // tant qu'une ligne est trouvée :
         while ($uneLigne) {
-            // création d'un objet Utilisateur
+            // création d'un objet Point
             $unIdTrace = utf8_encode($uneLigne->idTrace);
             $unId = utf8_encode($uneLigne->id);
             $uneLatitude = utf8_encode($uneLigne->latitude);
@@ -579,7 +579,7 @@ class DAO
 
             
             $unPoint = new PointDeTrace($unIdTrace, $unId, $uneLatitude, $uneLongitude, $uneAltitude, $dateHeure, $unRythmeCardio, 0 , 0 , 0);
-            // ajout de l'utilisateur à la collection
+            // ajout du point à la collection
             $lesPointsDeTrace[] = $unPoint;
             // extrait la ligne suivante
             $uneLigne = $req->fetch(PDO::FETCH_OBJ);
