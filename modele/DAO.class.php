@@ -472,7 +472,51 @@ class DAO
         return true;
     }
     
-
+    
+    public function getToutesLesTraces(){
+        // préparation de la requête de recherche
+        $txt_req = "Select id, dateDebut, dateFin, terminee, idUtilisateur, pseudo ,nbPoints";
+        $txt_req .= " from tracegps_vue_traces";
+        $txt_req .= " order by id desc";
+        
+        $req = $this->cnx->prepare($txt_req);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        
+        // construction d'une collection d'objets Utilisateur
+        $lesTraces = array();
+        $lesPoints = array();
+        // tant qu'une ligne est trouvée :
+        while ($uneLigne) {
+            // création d'un objet Utilisateur
+            $unId = utf8_encode($uneLigne->id);
+            $uneDateDebut = utf8_encode($uneLigne->dateDebut);
+            $uneDateFin = utf8_encode($uneLigne->dateFin);
+            $terminee = utf8_encode($uneLigne->terminee);
+            $idUtilisateur = utf8_encode($uneLigne->idUtilisateur);
+            $pseudo = utf8_encode($uneLigne->pseudo);
+            $nbPoints = utf8_encode($uneLigne->nbPoints);
+            
+            $uneTrace =  new Trace($unId, $uneDateDebut, $uneDateFin, $terminee, $idUtilisateur,$pseudo, $nbPoints);
+            
+            $lesPoints = $this->getLesPointsDeTrace($unId);
+            foreach($lesPoints as $leNouveauPoint){
+                $uneTrace->ajouterPoint($leNouveauPoint);
+            }
+            // ajout de l'utilisateur à la collection
+            $lesTraces[] = $uneTrace;
+            // extrait la ligne suivante
+            $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+            
+        }
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        // fourniture de la collection
+        return $lesTraces;
+    }
+    
+    
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
     // --------------------------------------------------------------------------------------
