@@ -423,10 +423,49 @@ class DAO
     }
     
     
+    public function getUneTrace($id) {
+        // préparation de la requête de recherche
+        $txt_req = "Select  id,dateDebut,dateFin,terminee, idUtilisateur";
+        $txt_req .= " FROM tracegps_traces";
+        $txt_req .= " where id = :id";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("id", $id, PDO::PARAM_STR);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ); 
+        
+        
+        // traitement de la réponse
+        if ( ! $uneLigne) {
+            return null;
+        }
+        else {
+                // création d'un objet Utilisateur
+                $unId = utf8_encode($uneLigne->id);
+                $dateDebut = utf8_encode($uneLigne->dateDebut);
+                $dateFin = utf8_encode($uneLigne->dateFin);
+                $terminee = utf8_encode($uneLigne->terminee);
+                $unidUtilisateur = utf8_encode($uneLigne->idUtilisateur);
+                
+                $uneTrace = new Trace($unId, $dateDebut, $dateFin, $terminee, $unidUtilisateur);
+                
+                $lesPoints = $this->getLesPointsDeTrace($id);
+                
+                
+                foreach($lesPoints as $nouveauPoint){
+                    $uneTrace->ajouterPoint($nouveauPoint);
+                }
+                            
+            return $uneTrace;
+        }
+    }
+    
+    
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
-   
+
     // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
     // modifié par Jim le 27/12/2017
     public function autoriseAConsulter($idAutorisant, $idAutorise) {
@@ -450,6 +489,26 @@ class DAO
         else {
             return true;
         }
+    }
+    
+    
+    // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
+    // modifié par Jim le 27/12/2017
+    public function supprimerUneAutorisation($idAutorisant, $idAutorise) {
+        // préparation de la requête de recherche
+        $txt_req = "delete from tracegps_autorisations where idAutorise = :idAutorise AND idAutorisant = :idAutorisant";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
+        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
+        // exécution de la requête
+        $ok = $req->execute();
+
+        
+        // sortir en cas d'échec
+        if ( ! $ok) {return false; }
+        
+        return true;
     }
 
     // --------------------------------------------------------------------------------------
@@ -547,6 +606,53 @@ class DAO
 
         return true;
     }
+    
+    
+    // fournit la collection des points de la trace $idTrace
+    // Valeur de retour : collection d'objets PointDeTrace 
+    // la collection des points de la trace $idTrace
+    // modifié par Monorom le 16/10/2020
+    public function getLesPointsDeTrace($idTrace) {
+        // préparation de la requête de recherche
+        $txt_req = "Select idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio";
+        $txt_req .= " from tracegps_points";
+        $txt_req .= " where idTrace = :idTrace";
+        
+        
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idTrace", $idTrace, PDO::PARAM_INT);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        
+        // construction d'une collection d'objets lesPointsDeTrace
+        $lesPointsDeTrace = array();
+        // tant qu'une ligne est trouvée :
+        while ($uneLigne) {
+            // création d'un objet Point
+            $unIdTrace = utf8_encode($uneLigne->idTrace);
+            $unId = utf8_encode($uneLigne->id);
+            $uneLatitude = utf8_encode($uneLigne->latitude);
+            $uneLongitude = utf8_encode($uneLigne->longitude);
+            $uneAltitude = utf8_encode($uneLigne->altitude);
+            $dateHeure = utf8_encode($uneLigne->dateHeure);
+            $unRythmeCardio = utf8_encode($uneLigne->rythmeCardio);
+
+            
+            $unPoint = new PointDeTrace($unIdTrace, $unId, $uneLatitude, $uneLongitude, $uneAltitude, $dateHeure, $unRythmeCardio, 0 , 0 , 0);
+            // ajout du point à la collection
+            $lesPointsDeTrace[] = $unPoint;
+            // extrait la ligne suivante
+            $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        }
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        // fourniture de la collection
+        return $lesPointsDeTrace;
+    }
+    
+    
     
 } // fin de la classe DAO
 
