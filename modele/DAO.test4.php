@@ -41,19 +41,30 @@ $dao = new DAO();
 // echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
 
 
-// test de la méthode getLesPointsDeTrace ---------------------------------------------------------
-// modifié par Jim le 13/8/2018
-echo "<h3>Test de getLesPointsDeTrace : </h3>";
-$lesPoints = $dao->getLesPointsDeTrace(1);
-$nbPoints = sizeof($lesPoints);
-echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
-// affichage des points
-foreach ($lesPoints as $unPoint)
-{   echo ($unPoint->toString());
+// // test de la méthode getLesPointsDeTrace ---------------------------------------------------------
+// // modifié par Jim le 13/8/2018
+// echo "<h3>Test de getLesPointsDeTrace : </h3>";
+// $lesPoints = $dao->getLesPointsDeTrace(1);
+// $nbPoints = sizeof($lesPoints);
+// echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
+// // affichage des points
+// foreach ($lesPoints as $unPoint)
+// {   echo ($unPoint->toString());
+// echo ('<br>');
+// }
+
+
+// test de la méthode getLesTraces($idUtilisateur) ------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getLesTraces(idUtilisateur) : </h3>";
+$lesTraces = $dao->getLesTraces(2);
+$nbReponses = sizeof($lesTraces);
+echo "<p>Nombre de traces de l'utilisateur 2 : " . $nbReponses . "</p>";
+// affichage des traces
+foreach ($lesTraces as $uneTrace)
+{   echo ($uneTrace->toString());
 echo ('<br>');
 }
-
-
 
 
 // ferme la connexion à MySQL :
