@@ -504,21 +504,23 @@ class DAO
     
     public function creerUnPointDeTrace($unPointDeTrace) {
         // préparation de la requête
-        $txt_req1 = "insert into tracegps_points (idAutorisant, idAutorise)";
-        $txt_req1 .= " values (:idAutorisant, :idAutorise)";
+        $txt_req1 = "insert into tracegps_points (idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio)";
+        $txt_req1 .= " values (:idTrace, :id, :latitude, :longitude, :altitude, :dateHeure, :rythmeCardio)";
         $req1 = $this->cnx->prepare($txt_req1);
         // liaison de la requête et de ses paramètres
-        $req1->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
-        $req1->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
-        
+        $req1->bindValue("idTrace", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_INT);
+        $req1->bindValue("id", utf8_decode($unPointDeTrace->getId()), PDO::PARAM_INT);
+        $req1->bindValue("latitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
+        $req1->bindValue("longitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
+        $req1->bindValue("altitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
+        $req1->bindValue("dateHeure", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
+        $req1->bindValue("rythmeCardio", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_INT);
         // exécution de la requête
         $ok = $req1->execute();
         // sortir en cas d'échec
-        if ( ! $ok) {return false; }
-        
-        // recherche de l'identifiant (auto_increment) qui a été attribué à la trace
-        $unId = $this->cnx->lastInsertId();
-        $unUtilisateur->setId($unId);
+        if ( ! $ok) {
+            return false;
+        }
         return true;
     }
     
