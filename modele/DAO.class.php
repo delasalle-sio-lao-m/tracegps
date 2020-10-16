@@ -561,7 +561,20 @@ class DAO
     }
     
     
-    public function creerUnPointDeTrace($unPointDeTrace) {
+    public function creerUnPointDeTrace(PointDeTrace $unPointDeTrace) {
+        if($unPointDeTrace->getId() == 1)
+        {
+            // préparation de la requête
+            $txt_req1 = "UPDATE tracegps_trace";
+            $txt_req1 .= " SET dateDebut = :dateDebut";
+            $txt_req1 .= " WHERE id = :idTrace";
+            $req1 = $this->cnx->prepare($txt_req1);
+            // liaison de la requête et de ses paramètres
+            $req1->bindValue("dateDebut", utf8_decode($unPointDeTrace->getDateHeure()), PDO::PARAM_STR);
+            $req1->bindValue("idTrace", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_INT);
+            // exécution de la requête
+            $req1->execute();
+        }
         // préparation de la requête
         $txt_req1 = "insert into tracegps_points (idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio)";
         $txt_req1 .= " values (:idTrace, :id, :latitude, :longitude, :altitude, :dateHeure, :rythmeCardio)";
@@ -569,18 +582,60 @@ class DAO
         // liaison de la requête et de ses paramètres
         $req1->bindValue("idTrace", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_INT);
         $req1->bindValue("id", utf8_decode($unPointDeTrace->getId()), PDO::PARAM_INT);
-        $req1->bindValue("latitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
-        $req1->bindValue("longitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
-        $req1->bindValue("altitude", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
-        $req1->bindValue("dateHeure", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_STR);
-        $req1->bindValue("rythmeCardio", utf8_decode($unPointDeTrace->getIdTrace()), PDO::PARAM_INT);
+        $req1->bindValue("latitude", utf8_decode($unPointDeTrace->getLatitude()), PDO::PARAM_STR);
+        $req1->bindValue("longitude", utf8_decode($unPointDeTrace->getLongitude()), PDO::PARAM_STR);
+        $req1->bindValue("altitude", utf8_decode($unPointDeTrace->getAltitude()), PDO::PARAM_STR);
+        $req1->bindValue("dateHeure", utf8_decode($unPointDeTrace->getDateHeure()), PDO::PARAM_STR);
+        $req1->bindValue("rythmeCardio", utf8_decode($unPointDeTrace->getrythmeCardio()), PDO::PARAM_INT);
         // exécution de la requête
-        $ok = $req1->execute();
+        $ok2 = $req1->execute();
         // sortir en cas d'échec
-        if ( ! $ok) {
+        if ( ! $ok2) {
             return false;
         }
         return true;
+    }
+    
+    public function getLesTracesAutorisees($idUtilisateur) {
+        // préparation de la requête de recherche
+        $txt_req = "Select distinct  id, dateDebut, dateFin, terminee, idUtilisateur";
+        $txt_req .= " FROM tracegps_traces inner join tracegps_autorisations";
+        $txt_req .= " ON tracegps_traces.idUtilisateur = tracegps_autorisations.idAutorisant";
+        $txt_req .= " WHERE idAutorise = :idUtilisateur";
+        $txt_req .= " ORDER BY id";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idUtilisateur", $idUtilisateur, PDO::PARAM_INT);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        
+        $lesTraces = array();
+        
+        // traitement de la réponse
+        while ($uneLigne) {
+            // création d'un objet Trace
+            $unId = utf8_encode($uneLigne->id);
+            $uneDateHeureDebut = utf8_encode($uneLigne->dateDebut);
+            $uneDateHeureFin = utf8_encode($uneLigne->dateFin);
+            $terminee = utf8_encode($uneLigne->terminee);
+            $unIdUtilisateur = utf8_encode($uneLigne->idUtilisateur);
+            
+            $uneTrace = new Trace($unId, $uneDateHeureDebut, $uneDateHeureFin, $terminee, $unIdUtilisateur,);
+            
+            $lesPoints = $this->getLesPointsDeTrace($unId);
+            foreach ($lesPoints as $leNouveauPoint)
+            {
+                $uneTrace->ajouterPoint($leNouveauPoint);
+            }
+            
+            $lesTraces[] = $uneTrace;
+            $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+            
+        }
+        $req->closeCursor();
+        
+        return $lesTraces;
     }
     
     // --------------------------------------------------------------------------------------
@@ -617,7 +672,6 @@ class DAO
         $txt_req = "Select idTrace, id, latitude, longitude, altitude, dateHeure, rythmeCardio";
         $txt_req .= " from tracegps_points";
         $txt_req .= " where idTrace = :idTrace";
-        
         
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et de ses paramètres
