@@ -31,14 +31,27 @@ include_once ('DAO.class.php');
 $dao = new DAO();
 
 
-// test de la méthode creerUneAutorisation ----------------------------------------------------------
-// modifié par Monorom LAO le 13/10/2020
-echo "<h3>Test de creerUneAutorisation : </h3>";
-if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
-// la même autorisation ne peut pas être enregistrée 2 fois
-if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
-echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+// // test de la méthode creerUneAutorisation ----------------------------------------------------------
+// // modifié par Monorom LAO le 13/10/2020
+// echo "<h3>Test de creerUneAutorisation : </h3>";
+// if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+// echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+// // la même autorisation ne peut pas être enregistrée 2 fois
+// if ($dao->creerUneAutorisation(2, 1)) $ok = "oui"; else $ok = "non";
+// echo "<p>La création de l'autorisation de l'utilisateur 2 vers l'utilisateur 1 a réussi : <b>" . $ok . "</b><br>";
+
+
+// test de la méthode getLesPointsDeTrace ---------------------------------------------------------
+// modifié par Jim le 13/8/2018
+echo "<h3>Test de getLesPointsDeTrace : </h3>";
+$lesPoints = $dao->getLesPointsDeTrace(1);
+$nbPoints = sizeof($lesPoints);
+echo "<p>Nombre de points de la trace 1 : " . $nbPoints . "</p>";
+// affichage des points
+foreach ($lesPoints as $unPoint)
+{   echo ($unPoint->toString());
+echo ('<br>');
+}
 
 
 
