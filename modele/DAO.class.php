@@ -556,6 +556,68 @@ class DAO
     }
     
     
+    public function supprimerUneTrace($idTrace)
+    {
+        $unUtilisateur = $this->getUnUtilisateur($idTrace);
+        if ($unUtilisateur == null) 
+        {
+            $uneTrace = $this->getUneTrace($idTrace);
+            if ($uneTrace == null) 
+            {
+                return false;
+            }
+            else 
+            {   
+                // préparation de la requête de suppression des points
+                $txt_req1 = "delete from tracegps_points" ;
+                $txt_req1 .= " where idTrace = :idTrace";
+                $req1 = $this->cnx->prepare($txt_req1);
+                // liaison de la requête et de ses paramètres
+                $req1->bindValue("idTrace", utf8_decode($idTrace), PDO::PARAM_INT);
+                // exécution de la requête
+                $ok = $req1->execute();
+                
+                // préparation de la requête de suppression de la trace
+                $txt_req2 = "delete from tracegps_traces" ;
+                $txt_req2 .= " where id = :id";
+                $req2 = $this->cnx->prepare($txt_req2);
+                // liaison de la requête et de ses paramètres
+
+                $req2->bindValue("id", utf8_decode($idTrace), PDO::PARAM_INT);
+                // exécution de la requête
+                $ok = $req2->execute();
+                
+                return $ok;
+            }
+        }
+    }
+    
+    public function terminerUneTrace($idTrace)
+    {
+        $uneTrace = $this->getUneTrace($idTrace);
+        if ($uneTrace->getNombrePoints() == 0)
+        {
+            $dateFin = date("Y-m-d H:i:s");
+        }
+        else 
+        {
+            $dernierPoint = $uneTrace->getLesPointsDeTrace()[$uneTrace->getNombrePoints()-1];
+            $dateFin = $dernierPoint->getDateHeure();
+        }
+        $uneTrace->setDateHeureFin($dateFin);
+        
+        $txt_req = "update tracegps_traces set terminee = 1, dateFin = :dateFin";
+        $txt_req .= " where id = :idTrace";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idTrace", $idTrace, PDO::PARAM_INT);
+        $req->bindValue("dateFin", $dateFin, PDO::PARAM_STR);
+        // exécution de la requête
+        $ok = $req->execute();
+        return $ok;
+    }
+    
+    
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
     // --------------------------------------------------------------------------------------
