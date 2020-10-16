@@ -562,10 +562,8 @@ class DAO
             $uneDateFin = utf8_encode($uneLigne->dateFin);
             $terminee = utf8_encode($uneLigne->terminee);
             $idUtilisateur = utf8_encode($uneLigne->idUtilisateur);
-            $pseudo = utf8_encode($uneLigne->pseudo);
-            $nbPoints = utf8_encode($uneLigne->nbPoints);
             
-            $uneTrace =  new Trace($unId, $uneDateDebut, $uneDateFin, $terminee, $idUtilisateur,$pseudo, $nbPoints);
+            $uneTrace =  new Trace($unId, $uneDateDebut, $uneDateFin, $terminee, $idUtilisateur);
             
             $lesPoints = $this->getLesPointsDeTrace($unId);
             foreach($lesPoints as $leNouveauPoint){
