@@ -471,6 +471,7 @@ class DAO
         
         return true;
     }
+    
 
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
