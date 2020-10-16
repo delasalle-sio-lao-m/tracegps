@@ -501,6 +501,27 @@ class DAO
         }
     }
     
+    
+    public function creerUnPointDeTrace($unPointDeTrace) {
+        // préparation de la requête
+        $txt_req1 = "insert into tracegps_points (idAutorisant, idAutorise)";
+        $txt_req1 .= " values (:idAutorisant, :idAutorise)";
+        $req1 = $this->cnx->prepare($txt_req1);
+        // liaison de la requête et de ses paramètres
+        $req1->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
+        $req1->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
+        
+        // exécution de la requête
+        $ok = $req1->execute();
+        // sortir en cas d'échec
+        if ( ! $ok) {return false; }
+        
+        // recherche de l'identifiant (auto_increment) qui a été attribué à la trace
+        $unId = $this->cnx->lastInsertId();
+        $unUtilisateur->setId($unId);
+        return true;
+    }
+    
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 4 (Monorom Lao) : lignes 950 à 1150
     // --------------------------------------------------------------------------------------
