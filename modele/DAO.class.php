@@ -423,6 +423,45 @@ class DAO
     }
     
     
+    public function getUneTrace($id) {
+        // préparation de la requête de recherche
+        $txt_req = "Select  id,dateDebut,dateFin,terminee, idUtilisateur";
+        $txt_req .= " FROM tracegps_traces";
+        $txt_req .= " where id = :id";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("id", $id, PDO::PARAM_STR);
+        // extraction des données
+        $req->execute();
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        
+        
+        // traitement de la réponse
+        if ( ! $uneLigne) {
+            return null;
+        }
+        else {
+                // création d'un objet Utilisateur
+                $unId = utf8_encode($uneLigne->id);
+                $dateDebut = utf8_encode($uneLigne->dateDebut);
+                $dateFin = utf8_encode($uneLigne->dateFin);
+                $terminee = utf8_encode($uneLigne->terminee);
+                $unidUtilisateur = utf8_encode($uneLigne->idUtilisateur);
+                
+                $uneTrace = new Trace($unId, $dateDebut, $dateFin, $terminee, $unidUtilisateur);
+                
+                $lesPoints = $this->getLesPointsDeTrace($id);
+                
+                
+                foreach($lesPoints as $nouveauPoint){
+                    $uneTrace->ajouterPoint($nouveauPoint);
+                }
+                            
+            return $uneTrace;
+        }
+    }
+    
+    
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------

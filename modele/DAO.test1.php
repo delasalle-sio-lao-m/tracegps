@@ -41,7 +41,7 @@ if ($dao->existeAdrMailUtilisateur("delasalle.sio.jouant.t@gmail.com")) $existe 
 echo "Existence de l'utilisateur 'delasalle.sio.jouant.t@gmail.com' : <b>" . $existe . "</b></p>";
 */
 
-
+/*
 // test de la méthode getLesUtilisateursAutorisant ------------------------------------------------
 // modifié par Jim le 13/8/2018
 echo "<h3>Test de getLesUtilisateursAutorisant(idUtilisateur) : </h3>";
@@ -52,6 +52,25 @@ echo "<p>Nombre d'utilisateurs autorisant l'utilisateur 4 à voir leurs parcours
 foreach ($lesUtilisateurs as $unUtilisateur)
 {   echo ($unUtilisateur->toString());
 echo ('<br>');
+}
+*/
+
+// test de la méthode getUneTrace -----------------------------------------------------------------
+// modifié par Jim le 14/8/2018
+echo "<h3>Test de getUneTrace : </h3>";
+$uneTrace = $dao->getUneTrace(2);
+if ($uneTrace) {
+    echo "<p>La trace 2 existe : <br>" . $uneTrace->toString() . "</p>";
+}
+else {
+    echo "<p>La trace 2 n'existe pas !</p>";
+}
+$uneTrace = $dao->getUneTrace(100);
+if ($uneTrace) {
+    echo "<p>La trace 100 existe : <br>" . $uneTrace->toString() . "</p>";
+}
+else {
+    echo "<p>La trace 100 n'existe pas !</p>";
 }
 
 
