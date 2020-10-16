@@ -426,7 +426,7 @@ class DAO
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
-   
+
     // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
     // modifié par Jim le 27/12/2017
     public function autoriseAConsulter($idAutorisant, $idAutorise) {
@@ -450,6 +450,26 @@ class DAO
         else {
             return true;
         }
+    }
+    
+    
+    // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
+    // modifié par Jim le 27/12/2017
+    public function supprimerUneAutorisation($idAutorisant, $idAutorise) {
+        // préparation de la requête de recherche
+        $txt_req = "delete from tracegps_autorisations where idAutorise = :idAutorise AND idAutorisant = :idAutorisant";
+        $req = $this->cnx->prepare($txt_req);
+        // liaison de la requête et de ses paramètres
+        $req->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
+        $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
+        // exécution de la requête
+        $ok = $req->execute();
+
+        
+        // sortir en cas d'échec
+        if ( ! $ok) {return false; }
+        
+        return true;
     }
 
     // --------------------------------------------------------------------------------------
