@@ -648,49 +648,43 @@ class DAO
     // début de la zone attribuée au développeur 3 (Alan Cormier) : lignes 750 à 949
     // --------------------------------------------------------------------------------------
     
-    public function getLesUtilisateursAutorises($idUtilisateur) {
-        // préparation de la requête de recherche
-        $txt_req = "Select distinct  id, pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation, nbTraces, dateDerniereTrace";
-        $txt_req .= " FROM tracegps_vue_utilisateurs, tracegps_autorisations";
-        $txt_req .= " WHERE tracegps_vue_utilisateurs.id = tracegps_autorisations.idAutorise";
-        $txt_req .= " AND idAutorise IN ( SELECT idAutorise FROM tracegps_autorisations WHERE idAutorisant = :idAutorise)";
-        $txt_req .= " ORDER BY id";
+    public function getLesUtilisateursAutorises($idUtilisateur)
+    {
+        $txt_req = "Select id, pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation, nbTraces, dateDerniereTrace";
+        $txt_req .= " from tracegps_vue_utilisateurs INNER JOIN tracegps_autorisations ON tracegps_vue_utilisateurs.id = tracegps_autorisations.idAutorise";
+        $txt_req .= " where idAutorisant = :idUtilisateur";
         $req = $this->cnx->prepare($txt_req);
         // liaison de la requête et de ses paramètres
-        $req->bindValue("idAutorise", $idUtilisateur, PDO::PARAM_STR);
+        $req->bindValue("idUtilisateur", $idUtilisateur, PDO::PARAM_INT);
         // extraction des données
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
+        // libère les ressources du jeu de données
         
         $lesUtilisateurs = array();
-        
-        // traitement de la réponse
-        if ( ! $uneLigne) {
-            return null;
-        }
-        else {
-            while ($uneLigne) {
-                // création d'un objet Utilisateur
-                $unId = utf8_encode($uneLigne->id);
-                $unPseudo = utf8_encode($uneLigne->pseudo);
-                $unMdpSha1 = utf8_encode($uneLigne->mdpSha1);
-                $uneAdrMail = utf8_encode($uneLigne->adrMail);
-                $unNumTel = utf8_encode($uneLigne->numTel);
-                $unNiveau = utf8_encode($uneLigne->niveau);
-                $uneDateCreation = utf8_encode($uneLigne->dateCreation);
-                $unNbTraces = utf8_encode($uneLigne->nbTraces);
-                $uneDateDerniereTrace = utf8_encode($uneLigne->dateDerniereTrace);
-                
-                $unUtilisateur = new Utilisateur($unId, $unPseudo, $unMdpSha1, $uneAdrMail, $unNumTel, $unNiveau, $uneDateCreation, $unNbTraces, $uneDateDerniereTrace);
-                
-                $lesUtilisateurs[] = $unUtilisateur;
-                $uneLigne = $req->fetch(PDO::FETCH_OBJ);
-                
-            }
-            $req->closeCursor();
+        // tant qu'une ligne est trouvée :
+        while ($uneLigne) {
+            // création d'un objet Utilisateur
+            $unId = utf8_encode($uneLigne->id);
+            $unPseudo = utf8_encode($uneLigne->pseudo);
+            $unMdpSha1 = utf8_encode($uneLigne->mdpSha1);
+            $uneAdrMail = utf8_encode($uneLigne->adrMail);
+            $unNumTel = utf8_encode($uneLigne->numTel);
+            $unNiveau = utf8_encode($uneLigne->niveau);
+            $uneDateCreation = utf8_encode($uneLigne->dateCreation);
+            $unNbTraces = utf8_encode($uneLigne->nbTraces);
+            $uneDateDerniereTrace = utf8_encode($uneLigne->dateDerniereTrace);
             
-            return $lesUtilisateurs;
+            $unUtilisateur = new Utilisateur($unId, $unPseudo, $unMdpSha1, $uneAdrMail, $unNumTel, $unNiveau, $uneDateCreation, $unNbTraces, $uneDateDerniereTrace);
+            // ajout de l'utilisateur à la collection
+            $lesUtilisateurs[] = $unUtilisateur;
+            // extrait la ligne suivante
+            $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         }
+        // libère les ressources du jeu de données
+        $req->closeCursor();
+        // fourniture de la collection
+        return $lesUtilisateurs;
     }
     
     
