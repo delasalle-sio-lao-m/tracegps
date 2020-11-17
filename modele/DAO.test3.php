@@ -30,7 +30,7 @@
 include_once ('DAO.class.php');
 $dao = new DAO();
 
-/*
+
 // test de la méthode getLesUtilisateursAutorises -------------------------------------------------
 // modifié par Jim le 13/8/2018
 echo "<h3>Test de getLesUtilisateursAutorises(idUtilisateur) : </h3>";
@@ -42,7 +42,7 @@ foreach ($lesUtilisateurs as $unUtilisateur)
 {	echo ($unUtilisateur->toString());
 echo ('<br>');
 }
-*/
+
 
 
 
