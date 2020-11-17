@@ -64,7 +64,7 @@ else {
     			}
 
     			else {
-    			    if ( $uneTrace->getTerminee() == false ) {
+    			    if ( $uneTrace->getTerminee() == true ) {
     					$msg = "Erreur : la trace est déjà terminée.";
     					$code_reponse = 500;
     				}
@@ -85,7 +85,7 @@ else {
     				        $code_reponse = 400;
     				    }
     				    else {
-    				        $msg = "Point créé.";
+    				        $msg = "Point cree.";
     				        $code_reponse = 201;
     				    }
 
@@ -177,10 +177,17 @@ function creerFluxJSON($msg, $idPoint)
             }
         }
      */
-    
+    if($idPoint != 0){
+        
+        $elt_idPoint = ["id" => $idPoint];
+        $elt_data = ["reponse" => $msg, "donnees" => $elt_idPoint];
+        
+        
+    }
+    else{
+        $elt_data = ["reponse" => $msg, "donnees" => $elt_idPoint];
+    }
     // construction de l'élément "data"
-    $elt_data = ["reponse" => $msg];
-    
     // construction de la racine
     $elt_racine = ["data" => $elt_data];
     
