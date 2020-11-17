@@ -53,7 +53,7 @@ class DAO
     // ---------------------------------- Membres privés de la classe ---------------------------------------
     // ------------------------------------------------------------------------------------------------------
     
-    private $cnx;				// la connexion à la base de données
+    private $cnx; // la connexion à la base de données
     
     // ------------------------------------------------------------------------------------------------------
     // ---------------------------------- Constructeur et destructeur ---------------------------------------
@@ -61,13 +61,13 @@ class DAO
     public function __construct() {
         global $PARAM_HOTE, $PARAM_PORT, $PARAM_BDD, $PARAM_USER, $PARAM_PWD;
         try
-        {	$this->cnx = new PDO ("mysql:host=" . $PARAM_HOTE . ";port=" . $PARAM_PORT . ";dbname=" . $PARAM_BDD,
+        { $this->cnx = new PDO ("mysql:host=" . $PARAM_HOTE . ";port=" . $PARAM_PORT . ";dbname=" . $PARAM_BDD,
             $PARAM_USER,
             $PARAM_PWD);
         return true;
         }
         catch (Exception $ex)
-        {	echo ("Echec de la connexion a la base de donnees <br>");
+        { echo ("Echec de la connexion a la base de donnees <br>");
         echo ("Erreur numero : " . $ex->getCode() . "<br />" . "Description : " . $ex->getMessage() . "<br>");
         echo ("PARAM_HOTE = " . $PARAM_HOTE);
         return false;
@@ -104,7 +104,7 @@ class DAO
         // traitement de la réponse
         $reponse = 0;
         if ($uneLigne) {
-        	$reponse = $uneLigne->niveau;
+            $reponse = $uneLigne->niveau;
         }
         // libère les ressources du jeu de données
         $req->closeCursor();
@@ -136,7 +136,7 @@ class DAO
         }
     }
     
-
+    
     
     
     // fournit un objet Utilisateur à partir de son pseudo $pseudo
@@ -178,7 +178,7 @@ class DAO
     }
     
     
-
+    
     
     
     
@@ -225,7 +225,7 @@ class DAO
         // fourniture de la collection
         return $lesUtilisateurs;
     }
-
+    
     
     // enregistre l'utilisateur $unUtilisateur dans la bdd
     // fournit true si l'enregistrement s'est bien effectué, false sinon
@@ -343,7 +343,7 @@ class DAO
     // Développeur 4 : lignes 950 à 1150
     
     // Quelques conseils pour le travail collaboratif :
-    // avant d'attaquer un cycle de développement (début de séance, nouvelle méthode, ...), faites un Pull pour récupérer 
+    // avant d'attaquer un cycle de développement (début de séance, nouvelle méthode, ...), faites un Pull pour récupérer
     // la dernière version du fichier.
     // Après avoir testé et validé une méthode, faites un commit et un push pour transmettre cette version aux autres développeurs.
     
@@ -376,7 +376,7 @@ class DAO
         }
     }
     
-   
+    
     public function getLesUtilisateursAutorisant($idUtilisateur) {
         // préparation de la requête de recherche
         $txt_req = "Select distinct  id, pseudo, mdpSha1, adrMail, numTel, niveau, dateCreation, nbTraces, dateDerniereTrace";
@@ -433,7 +433,7 @@ class DAO
         $req->bindValue("id", $id, PDO::PARAM_STR);
         // extraction des données
         $req->execute();
-        $uneLigne = $req->fetch(PDO::FETCH_OBJ); 
+        $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         
         
         // traitement de la réponse
@@ -441,22 +441,22 @@ class DAO
             return null;
         }
         else {
-                // création d'un objet Utilisateur
-                $unId = utf8_encode($uneLigne->id);
-                $dateDebut = utf8_encode($uneLigne->dateDebut);
-                $dateFin = utf8_encode($uneLigne->dateFin);
-                $terminee = utf8_encode($uneLigne->terminee);
-                $unidUtilisateur = utf8_encode($uneLigne->idUtilisateur);
-                
-                $uneTrace = new Trace($unId, $dateDebut, $dateFin, $terminee, $unidUtilisateur);
-                
-                $lesPoints = $this->getLesPointsDeTrace($id);
-                
-                
-                foreach($lesPoints as $nouveauPoint){
-                    $uneTrace->ajouterPoint($nouveauPoint);
-                }
-                            
+            // création d'un objet Utilisateur
+            $unId = utf8_encode($uneLigne->id);
+            $dateDebut = utf8_encode($uneLigne->dateDebut);
+            $dateFin = utf8_encode($uneLigne->dateFin);
+            $terminee = utf8_encode($uneLigne->terminee);
+            $unidUtilisateur = utf8_encode($uneLigne->idUtilisateur);
+            
+            $uneTrace = new Trace($unId, $dateDebut, $dateFin, $terminee, $unidUtilisateur);
+            
+            $lesPoints = $this->getLesPointsDeTrace($id);
+            
+            
+            foreach($lesPoints as $nouveauPoint){
+                $uneTrace->ajouterPoint($nouveauPoint);
+            }
+            
             return $uneTrace;
         }
     }
@@ -491,7 +491,7 @@ class DAO
     // --------------------------------------------------------------------------------------
     // début de la zone attribuée au développeur 2 (Jeremy Tcha) : lignes 550 à 749
     // --------------------------------------------------------------------------------------
-
+    
     // fournit true si le idAutarisant $idAutorisant autorise idAutorise $idAutorise dans la table tracegps_autorisation, false sinon
     // modifié par Jim le 27/12/2017
     public function autoriseAConsulter($idAutorisant, $idAutorise) {
@@ -531,7 +531,7 @@ class DAO
         $req->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
         // exécution de la requête
         $ok = $req->execute();
-
+        
         
         // sortir en cas d'échec
         if ( ! $ok) {return false; }
@@ -585,15 +585,15 @@ class DAO
     public function supprimerUneTrace($idTrace)
     {
         $unUtilisateur = $this->getUnUtilisateur($idTrace);
-        if ($unUtilisateur == null) 
+        if ($unUtilisateur == null)
         {
             $uneTrace = $this->getUneTrace($idTrace);
-            if ($uneTrace == null) 
+            if ($uneTrace == null)
             {
                 return false;
             }
-            else 
-            {   
+            else
+            {
                 // préparation de la requête de suppression des points
                 $txt_req1 = "delete from tracegps_points" ;
                 $txt_req1 .= " where idTrace = :idTrace";
@@ -608,7 +608,7 @@ class DAO
                 $txt_req2 .= " where id = :id";
                 $req2 = $this->cnx->prepare($txt_req2);
                 // liaison de la requête et de ses paramètres
-
+                
                 $req2->bindValue("id", utf8_decode($idTrace), PDO::PARAM_INT);
                 // exécution de la requête
                 $ok = $req2->execute();
@@ -625,7 +625,7 @@ class DAO
         {
             $dateFin = date("Y-m-d H:i:s");
         }
-        else 
+        else
         {
             $dernierPoint = $uneTrace->getLesPointsDeTrace()[$uneTrace->getNombrePoints()-1];
             $dateFin = $dernierPoint->getDateHeure();
@@ -786,18 +786,18 @@ class DAO
         // liaison de la requête et de ses paramètres
         $req1->bindValue("idAutorise", $idAutorise, PDO::PARAM_STR);
         $req1->bindValue("idAutorisant", $idAutorisant, PDO::PARAM_STR);
-
+        
         // exécution de la requête
         $ok = $req1->execute();
         // sortir en cas d'échec
         if ( ! $ok) {return false; }
-
+        
         return true;
     }
     
     
     // fournit la collection des points de la trace $idTrace
-    // Valeur de retour : collection d'objets PointDeTrace 
+    // Valeur de retour : collection d'objets PointDeTrace
     // la collection des points de la trace $idTrace
     // modifié par Monorom le 16/10/2020
     public function getLesPointsDeTrace($idTrace) {
@@ -825,7 +825,7 @@ class DAO
             $uneAltitude = utf8_encode($uneLigne->altitude);
             $dateHeure = utf8_encode($uneLigne->dateHeure);
             $unRythmeCardio = utf8_encode($uneLigne->rythmeCardio);
-
+            
             
             $unPoint = new PointDeTrace($unIdTrace, $unId, $uneLatitude, $uneLongitude, $uneAltitude, $dateHeure, $unRythmeCardio, 0 , 0 , 0);
             // ajout du point à la collection
