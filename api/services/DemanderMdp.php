@@ -17,12 +17,9 @@
 
 // connexion du serveur web à la base MySQL
 $dao = new DAO();
-	
+
 // Récupération des données transmises
 $pseudo = ( empty($this->request['pseudo'])) ? "" : $this->request['pseudo'];
-$mdpSha1 = ( empty($this->request['mdp'])) ? "" : $this->request['mdp'];
-$nouveauMdp = ( empty($this->request['nouveauMdp'])) ? "" : $this->request['nouveauMdp'];
-$confirmationMdp = ( empty($this->request['confirmationMdp'])) ? "" : $this->request['confirmationMdp'];
 $lang = ( empty($this->request['lang'])) ? "" : $this->request['lang'];
 
 // "xml" par défaut si le paramètre lang est absent ou incorrect
@@ -30,8 +27,8 @@ if ($lang != "json") $lang = "xml";
 
 // La méthode HTTP utilisée doit être GET
 if ($this->getMethodeRequete() != "GET")
-{	$msg = "Erreur : méthode HTTP incorrecte.";
-    $code_reponse = 406;
+{ $msg = "Erreur : méthode HTTP incorrecte.";
+$code_reponse = 406;
 }
 else {
     // Les paramètres doivent être présents
@@ -45,36 +42,36 @@ else {
             $code_reponse = 400;
         }
         else {
-        	if ( $nouveauMdp != $confirmationMdp ) {
-        	    $msg = "Erreur : le nouveau mot de passe et sa confirmation sont différents.";
-        	    $code_reponse = 400;
-        	}
-        	else {
-        		if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) {
-        			$msg = "Erreur : authentification incorrecte.";
-        			$code_reponse = 401;
-        		}
-        		else {
-        			// enregistre le nouveau mot de passe de l'utilisateur dans la bdd après l'avoir codé en sha1
-        		    $ok = $dao->modifierMdpUtilisateur ($pseudo, $nouveauMdp);
-        		    if ( ! $ok ) {
-        		        $msg = "Erreur : problème lors de l'enregistrement du mot de passe.";
-        		        $code_reponse = 500;
-        		    }
-        		    else {
-        		        // envoie un courriel  à l'utilisateur avec son nouveau mot de passe 
-        		        $ok = $dao->envoyerMdp ($pseudo, $nouveauMdp);
-        		        if ( ! $ok ) {
-            			    $msg = "Enregistrement effectué ; l'envoi du courriel  de confirmation a rencontré un problème.";
-            			    $code_reponse = 500;
-        		        }
-        		        else {
-            			    $msg = "Enregistrement effectué ; vous allez recevoir un courriel de confirmation.";
-            			    $code_reponse = 200;
-        		        }
-        		    }
-        		}
-        	}
+            if ( $nouveauMdp != $confirmationMdp ) {
+                $msg = "Erreur : le nouveau mot de passe et sa confirmation sont différents.";
+                $code_reponse = 400;
+            }
+            else {
+                if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) {
+                    $msg = "Erreur : authentification incorrecte.";
+                    $code_reponse = 401;
+                }
+                else {
+                    // enregistre le nouveau mot de passe de l'utilisateur dans la bdd après l'avoir codé en sha1
+                    $ok = $dao->modifierMdpUtilisateur ($pseudo, $nouveauMdp);
+                    if ( ! $ok ) {
+                        $msg = "Erreur : problème lors de l'enregistrement du mot de passe.";
+                        $code_reponse = 500;
+                    }
+                    else {
+                        // envoie un courriel  à l'utilisateur avec son nouveau mot de passe
+                        $ok = $dao->envoyerMdp ($pseudo, $nouveauMdp);
+                        if ( ! $ok ) {
+                            $msg = "Enregistrement effectué ; l'envoi du courriel  de confirmation a rencontré un problème.";
+                            $code_reponse = 500;
+                        }
+                        else {
+                            $msg = "Enregistrement effectué ; vous allez recevoir un courriel de confirmation.";
+                            $code_reponse = 200;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -101,40 +98,40 @@ exit;
 
 // création du flux XML en sortie
 function creerFluxXML($msg)
-{	
+{
     /* Exemple de code XML
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!--Service web ChangerDeMdp - BTS SIO - Lycée De La Salle - Rennes-->
-        <data>
-            <reponse>Erreur : authentification incorrecte.</reponse>
-        </data>
+     <?xml version="1.0" encoding="UTF-8"?>
+     <!--Service web ChangerDeMdp - BTS SIO - Lycée De La Salle - Rennes-->
+     <data>
+     <reponse>Erreur : authentification incorrecte.</reponse>
+     </data>
      */
     
     // crée une instance de DOMdocument (DOM : Document Object Model)
-	$doc = new DOMDocument();
-	
-	// specifie la version et le type d'encodage
-	$doc->version = '1.0';
-	$doc->encoding = 'UTF-8';
-	
-	// crée un commentaire et l'encode en UTF-8
-	$elt_commentaire = $doc->createComment('Service web ChangerDeMdp - BTS SIO - Lycée De La Salle - Rennes');
-	// place ce commentaire à la racine du document XML
-	$doc->appendChild($elt_commentaire);
-	
-	// crée l'élément 'data' à la racine du document XML
-	$elt_data = $doc->createElement('data');
-	$doc->appendChild($elt_data);
-	
-	// place l'élément 'reponse' juste après l'élément 'data'
-	$elt_reponse = $doc->createElement('reponse', $msg);
-	$elt_data->appendChild($elt_reponse);
-	
-	// Mise en forme finale
-	$doc->formatOutput = true;
-	
-	// renvoie le contenu XML
-	return $doc->saveXML();
+    $doc = new DOMDocument();
+    
+    // specifie la version et le type d'encodage
+    $doc->version = '1.0';
+    $doc->encoding = 'UTF-8';
+    
+    // crée un commentaire et l'encode en UTF-8
+    $elt_commentaire = $doc->createComment('Service web ChangerDeMdp - BTS SIO - Lycée De La Salle - Rennes');
+    // place ce commentaire à la racine du document XML
+    $doc->appendChild($elt_commentaire);
+    
+    // crée l'élément 'data' à la racine du document XML
+    $elt_data = $doc->createElement('data');
+    $doc->appendChild($elt_data);
+    
+    // place l'élément 'reponse' juste après l'élément 'data'
+    $elt_reponse = $doc->createElement('reponse', $msg);
+    $elt_data->appendChild($elt_reponse);
+    
+    // Mise en forme finale
+    $doc->formatOutput = true;
+    
+    // renvoie le contenu XML
+    return $doc->saveXML();
 }
 
 // ================================================================================================
@@ -143,11 +140,11 @@ function creerFluxXML($msg)
 function creerFluxJSON($msg)
 {
     /* Exemple de code JSON
-         {
-             "data": {
-                "reponse": "Erreur : authentification incorrecte."
-             }
-         }
+     {
+     "data": {
+     "reponse": "Erreur : authentification incorrecte."
+     }
+     }
      */
     
     // construction de l'élément "data"
