@@ -14,7 +14,7 @@
 //     http://<hébergeur>/tracegps/api/GetTousLesUtilisateurs?pseudo=callisto&mdp=13e3668bbee30b004380052b086457b014504b3e&lang=xml
 
 // connexion du serveur web à la base MySQL
-$dao = new DAO();
+$dao = new DAO(); 
 
 // Récupération des données transmises
 $pseudo = ( empty($this->request['pseudo'])) ? "" : $this->request['pseudo'];
