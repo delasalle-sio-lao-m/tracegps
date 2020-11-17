@@ -462,7 +462,7 @@ class DAO
     }
     
     
-    public function CreerUneTrace($uneTrace) {
+    public function creerUneTrace($uneTrace) {
         // on teste si l'utilisateur existe déjà
         
         // préparation de la requête
