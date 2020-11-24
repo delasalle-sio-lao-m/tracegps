@@ -21,32 +21,39 @@ $lesUtilisateurs = array();
 
 // La méthode HTTP utilisée doit être GET
 if ($this->getMethodeRequete() != "GET")
-{	$msg = "Erreur : méthode HTTP incorrecte.";
+{	
+    $msg = "Erreur : méthode HTTP incorrecte.";
     $code_reponse = 406;
 }
 else {
     // Les paramètres doivent être présents
-    if ( $pseudo == "" || $mdpSha1 == "" )
-    {	$msg = "Erreur : données incomplètes.";
+    if ( $pseudo == "" || $mdp == "" )
+    {	 
+        $msg = "Erreur : données incomplètes.";
         $code_reponse = 400;
     }
     else
-    {	if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) {
-    		$msg = "Erreur : authentification incorrecte.";
-    		$code_reponse = 401;
+    {
+        if ( $dao->getNiveauConnexion($pseudo, $mdp) == 0 )
+        {
+            $msg = "Erreur : authentification incorrecte.";
+            $code_reponse = 400;
         }
-    	else 
-    	{	// récupération de la liste des utilisateurs à l'aide de la méthode getTousLesUtilisateurs de la classe DAO
+       else 
+    	{	
+    	    // récupération de la liste des utilisateurs à l'aide de la méthode getTousLesUtilisateurs de la classe DAO
     	    $lesUtilisateurs = $dao->getTousLesUtilisateurs();
     	    
     	    // mémorisation du nombre d'utilisateurs
     	    $nbReponses = sizeof($lesUtilisateurs);
     	
-    	    if ($nbReponses == 0) {
+    	    if ($nbReponses == 0)
+    	    {
     			$msg = "Aucun utilisateur.";
     			$code_reponse = 200;
     	    }
-    	    else {
+    	    else 
+    	    {
     			$msg = $nbReponses . " utilisateur(s).";
     			$code_reponse = 200;
     	    }
