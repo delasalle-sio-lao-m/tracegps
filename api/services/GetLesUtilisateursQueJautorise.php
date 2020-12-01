@@ -1,6 +1,6 @@
 <?php
 // Projet TraceGPS - services web
-// fichier : api/services/GetTousLesUtilisateurs.php
+// fichier : api/services/GetTousLesUtilisateursQueJautorise.php
 // Dernière mise à jour : 3/7/2019 par Jim
 
 // Rôle : ce service permet à un utilisateur authentifié d'obtenir la liste de tous les utilisateurs (de niveau 1)
@@ -55,11 +55,11 @@ else {
         $nbReponses = sizeof($lesUtilisateursAutorises);
         
         if ($nbReponses == 0) {
-            $msg = "Aucun autorisation accordée par. $pseudo";
+            $msg = "Aucun autorisation accordée par $pseudo.";
             $code_reponse = 200;
         }
         else {
-            $msg = $nbReponses . " utilisateur(s).";
+            $msg = $nbReponses . " autorisation(s) accordée(s) par $pseudo.";
             $code_reponse = 200;
         }
     }
@@ -91,7 +91,7 @@ function creerFluxXML($msg, $lesUtilisateursAutorises)
 {
     /* Exemple de code XML
      <?xml version="1.0" encoding="UTF-8"?>
-     <!--Service web GetTousLesUtilisateurs - BTS SIO - Lycée De La Salle - Rennes-->
+     <!--Service web GetLesUtilisateursQueJautorise - BTS SIO - Lycée De La Salle - Rennes-->
      <data>
      <reponse>2 utilisateur(s).</reponse>
      <donnees>
