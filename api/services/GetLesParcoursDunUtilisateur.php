@@ -98,7 +98,7 @@ else {
 }
 
 // envoi de la réponse HTTP
-$this->envoyerReponse(406, $content_type, $donnees);
+$this->envoyerReponse($code_reponse, $content_type, $donnees);
 
 // fin du programme (pour ne pas enchainer sur les 2 fonctions qui suivent)
 exit;

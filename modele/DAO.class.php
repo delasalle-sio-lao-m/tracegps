@@ -435,7 +435,6 @@ class DAO
         $req->execute();
         $uneLigne = $req->fetch(PDO::FETCH_OBJ);
         
-        
         // traitement de la réponse
         if ( ! $uneLigne) {
             return null;
