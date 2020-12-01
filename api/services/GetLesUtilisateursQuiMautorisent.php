@@ -26,56 +26,61 @@ if ($lang != "json") $lang = "xml";
 
 // initialisation du nombre de réponses
 $nbReponses = 0;
-$lesUtilisateursAutorises = array();
+$lesUtilisateursAutorisant = array();
 
 // La méthode HTTP utilisée doit être GET
 if ($this->getMethodeRequete() != "GET")
 {	$msg = "Erreur : méthode HTTP incorrecte.";
-$code_reponse = 406;
+    $code_reponse = 406;
 }
-else {
+else 
+{
     // Les paramètres doivent être présents
     if ( $pseudo == "" || $mdpSha1 == "" )
     {	$msg = "Erreur : données incomplètes.";
-    $code_reponse = 400;
+        $code_reponse = 400;
     }
     else
-    {	if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) {
-        $msg = "Erreur : authentification incorrecte.";
-        $code_reponse = 401;
-    }
-    else
-    {	// récupération de l'id de l'utilisateur
-        $idUtilisateur = $dao->getUnUtilisateur($pseudo);
-        $idUtilisateur = $idUtilisateur->getId();
-        // récupération de la liste des utilisateurs qui m'autorisent à l'aide de la méthode getLesUtilisateursAutorisant de la classe DAO
-        $lesUtilisateursAutorises = $dao->getLesUtilisateursAutorisant($idUtilisateur);
-        
-        // mémorisation du nombre d'utilisateurs
-        $nbReponses = sizeof($lesUtilisateursAutorises);
-        
-        if ($nbReponses == 0) {
-            $msg = "Aucun autorisation accordée par. $pseudo";
-            $code_reponse = 200;
+    {	if ( $dao->getNiveauConnexion($pseudo, $mdpSha1) == 0 ) 
+        {
+            $msg = "Erreur : authentification incorrecte.";
+            $code_reponse = 401;
         }
-        else {
-            $msg = $nbReponses . " utilisateur(s).";
-            $code_reponse = 200;
+        else
+        {	// récupération de l'id de l'utilisateur
+            $idUtilisateur = $dao->getUnUtilisateur($pseudo)->getId();
+            // récupération de la liste des utilisateurs qui m'autorisent à l'aide de la méthode getLesUtilisateursAutorisant de la classe DAO
+            $lesUtilisateursAutorisant = $dao->getLesUtilisateursAutorisant($idUtilisateur);
+            
+            // mémorisation du nombre d'utilisateurs
+            $nbReponses = sizeof($lesUtilisateursAutorisant);
+            
+            if ($nbReponses == 0) 
+            {
+                $msg = "Aucune autorisation accordée à $pseudo.";
+                $code_reponse = 200;
+            }
+            else 
+            {
+                $msg = $nbReponses . " autorisation(s) accordée(s) à $pseudo.";
+                $code_reponse = 200;
+            }
         }
-    }
     }
 }
 // ferme la connexion à MySQL :
 unset($dao);
 
 // création du flux en sortie
-if ($lang == "xml") {
+if ($lang == "xml") 
+{
     $content_type = "application/xml; charset=utf-8";      // indique le format XML pour la réponse
-    $donnees = creerFluxXML($msg, $lesUtilisateursAutorises);
+    $donnees = creerFluxXML($msg, $lesUtilisateursAutorisant);
 }
-else {
+else 
+{
     $content_type = "application/json; charset=utf-8";      // indique le format Json pour la réponse
-    $donnees = creerFluxJSON($msg, $lesUtilisateursAutorises);
+    $donnees = creerFluxJSON($msg, $lesUtilisateursAutorisant);
 }
 
 // envoi de la réponse HTTP
@@ -87,7 +92,7 @@ exit;
 // ================================================================================================
 
 // création du flux XML en sortie
-function creerFluxXML($msg, $lesUtilisateursAutorises)
+function creerFluxXML($msg, $lesUtilisateursAutorisant)
 {
     /* Exemple de code XML
      <?xml version="1.0" encoding="UTF-8"?>
@@ -141,7 +146,7 @@ function creerFluxXML($msg, $lesUtilisateursAutorises)
     $elt_data->appendChild($elt_reponse);
     
     // traitement des utilisateurs
-    if (sizeof($lesUtilisateursAutorises) > 0) {
+    if (sizeof($lesUtilisateursAutorisant) > 0) {
         // place l'élément 'donnees' dans l'élément 'data'
         $elt_donnees = $doc->createElement('donnees');
         $elt_data->appendChild($elt_donnees);
@@ -150,7 +155,7 @@ function creerFluxXML($msg, $lesUtilisateursAutorises)
         $elt_lesUtilisateurs = $doc->createElement('lesUtilisateurs');
         $elt_donnees->appendChild($elt_lesUtilisateurs);
         
-        foreach ($lesUtilisateursAutorises as $unUtilisateur)
+        foreach ($lesUtilisateursAutorisant as $unUtilisateur)
         {
             // crée un élément vide 'utilisateur'
             $elt_utilisateur = $doc->createElement('utilisateur');
@@ -195,7 +200,7 @@ function creerFluxXML($msg, $lesUtilisateursAutorises)
 // ================================================================================================
 
 // création du flux JSON en sortie
-function creerFluxJSON($msg, $lesUtilisateursAutorises)
+function creerFluxJSON($msg, $lesUtilisateursAutorisant)
 {
     /* Exemple de code JSON
      {
@@ -229,14 +234,14 @@ function creerFluxJSON($msg, $lesUtilisateursAutorises)
      */
     
     
-    if (sizeof($lesUtilisateursAutorises) == 0) {
+    if (sizeof($lesUtilisateursAutorisant) == 0) {
         // construction de l'élément "data"
         $elt_data = ["reponse" => $msg];
     }
     else {
         // construction d'un tableau contenant les utilisateurs
         $lesObjetsDuTableau = array();
-        foreach ($lesUtilisateursAutorises as $unUtilisateur)
+        foreach ($lesUtilisateursAutorisant as $unUtilisateur)
         {	// crée une ligne dans le tableau
             $unObjetUtilisateur = array();
             $unObjetUtilisateur["id"] = $unUtilisateur->getId();
