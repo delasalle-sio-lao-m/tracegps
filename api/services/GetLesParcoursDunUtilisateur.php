@@ -13,6 +13,7 @@
 // Les paramètres doivent être passés par la méthode GET :
 //     http://<hébergeur>/tracegps/api/GetTousLesUtilisateurs?pseudo=callisto&mdp=13e3668bbee30b004380052b086457b014504b3e&lang=xml
 
+
 // connexion du serveur web à la base MySQL
 $dao = new DAO(); 
 
@@ -30,15 +31,14 @@ $nbReponses = 0;
 $lesTraces = array();
 
 // La méthode HTTP utilisée doit être GET
-// La méthode HTTP utilisée doit être GET
 if ($this->getMethodeRequete() != "GET")
-{ $msg = "Erreur : méthode HTTP incorrecte.";
+{	$msg = "Erreur : méthode HTTP incorrecte.";
 $code_reponse = 406;
 }
 else {
     // Les paramètres doivent être présents
-    if ( $pseudo == "" || $mdpSha1 == "" || $pseudoConsulte == "")
-    { $msg = "Erreur : données incomplètes.";
+    if ( $pseudo == "" || $mdpSha1 == "" || $pseudoConsulte == "" )
+    {	$msg = "Erreur : données incomplètes.";
     $code_reponse = 400;
     }
     else
@@ -85,8 +85,7 @@ else {
 // ferme la connexion à MySQL :
 unset($dao);
 
-// création du flux en sortie
-$msg = $nbReponses. " trace(s) pour l'utilisateur ".$pseudoConsulte;
+
 
 if ($lang == "xml") {
     $content_type = "application/xml; charset=utf-8";      // indique le format XML pour la réponse
@@ -265,24 +264,18 @@ function creerFluxJSON($msg, $lesTraces)
         $lesObjetsDuTableau = array();
         foreach ($lesTraces as $uneTrace)
         { // crée une ligne dans le tableau
-            if ($uneTrace->getTerminee() == 0)
-            {   $uneTrace["id"] = $uneTrace->getId();
-            $uneTrace["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
-            $uneTrace["terminee"] = 0;
-            $uneTrace["distance"] = $uneTrace->getDistanceTotale();
-            $uneTrace["idUtilisateur"] = $uneTrace->getIdUtilisateur();
+            $lesObjetsDuTableau["id"] = $uneTrace->getId();
+            $lesObjetsDuTableau["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
+            $lesObjetsDuTableau["terminee"] = $uneTrace->getTerminee();
+            $lesObjetsDuTableau["distance"] = $uneTrace->getDistanceTotale();
+            $lesObjetsDuTableau["idUtilisateur"] = $uneTrace->getIdUtilisateur();
             }
-            else{
-                $uneTrace = array();
-                $uneTrace["id"] = $uneTrace->getId();
-                $uneTrace["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
-                $uneTrace["terminee"] = $uneTrace->getTerminee();
-                $uneTrace["dateHeureFin"] = $uneTrace->getDateHeureFin();
-                $uneTrace["idUtilisateur"] = $uneTrace->getIdUtilisateur();
+            if ($uneTrace->getNbTraces() > 0)
+            {   $lesObjetsDuTableau["dateHeureFin"] = $uneTrace->getDateDerniereTrace();
             }
             
             $lesObjetsDuTableau[] = $uneTrace;
-        }
+        
         // construction de l'élément "lesUtilisateurs"
         $elt_trace = ["lesTraces" => $lesObjetsDuTableau];
         
