@@ -263,7 +263,7 @@ function creerFluxJSON($msg, $lesTraces)
         // construction d'un tableau contenant les utilisateurs
         $lesObjetsDuTableau = array();
         
-        foreach ($lesTraces as $uneTrace)
+        foreach ($lesTraces as $uneTrace)   
         { 
             if ($uneTrace->getTerminee() < 0)
             {   
