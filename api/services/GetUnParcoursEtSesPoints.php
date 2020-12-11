@@ -16,7 +16,7 @@ $lang = ( empty($this->request['lang'])) ? "" : $this->request['lang'];
 if ($lang != "json") $lang = "xml";
 
 // initialisation du nombre des collections
-$laTrace = array();
+$laTrace = null;
 $lesPointsDeLaTrace = array();
 
 // La méthode HTTP utilisée doit être GET
@@ -44,13 +44,14 @@ else {
                 else {
                         $unPoint = $dao->getLesUtilisateursAutorises($pseudo);
                         if ($unPoint != null){
-                            $msg =  "Erreur : vous n'êtes pas autorisé par cet utilisateur.";
+                            $msg =  "Erreur : vous n'êtes pas autorisé par le propriétaire du parcours";
                             $code_reponse = 401;
                         }
                         else {
                     	    $laTrace = $dao->getUneTrace($idTrace);
                     	    $lesPointsDeLaTrace = $dao->getLesPointsDeTrace($idTrace);
                     	    $msg = "Données de la trace demandée.";
+                    	    $code_reponse = 200;
                         }
                 }
         }
@@ -100,64 +101,67 @@ function creerFluxXML($msg, $laTrace, $lesPointsDeLaTrace)
 	$elt_reponse = $doc->createElement('reponse', $msg);
 	$elt_data->appendChild($elt_reponse);
 	
-	// place l'élément 'donnees' dans l'élément 'data'
-	$elt_donnees = $doc->createElement('donnees');
-	$elt_data->appendChild($elt_donnees);
-	
-	// place l'élément 'trace' dans l'élément 'donnees'
-	$elt_laTrace = $doc->createElement('trace');
-	$elt_donnees->appendChild($elt_laTrace);
-	
-	// crée les éléments enfants de l'élément 'trace'
-	$elt_id         = $doc->createElement('id', $laTrace->Trace::getId());
-	$elt_laTrace->appendChild($elt_id);
-	
-	$elt_dateHeureDebut     = $doc->createElement('dateHeureDebut', $laTrace->getDateHeureDebut());
-	$elt_laTrace->appendChild($elt_dateHeureDebut);
-	
-	$elt_longitude    = $doc->createElement('terminee', $laTrace->getTerminee());
-	$elt_laTrace->appendChild($elt_longitude);
-	
-	$elt_dateHeureFin     = $doc->createElement('dateHeureFin', $laTrace->getDateHeureFin());
-	$elt_laTrace->appendChild($elt_dateHeureFin);
-	
-	$elt_idUtilisateur     = $doc->createElement('idUtilisateur', $laTrace->getIdUtilisateur());
-	$elt_laTrace->appendChild($elt_idUtilisateur);
-	
-	// traitement des points
-	if (sizeof($lesPointsDeLaTrace) > 0) {
-	    	    
-	    // place l'élément 'lesPoints' dans l'élément 'donnees'
-	    $elt_lesPointsDeTrace = $doc->createElement('lesPoints');
-	    $elt_donnees->appendChild($elt_lesPointsDeTrace);
+	if ($laTrace != null)
+	{
+	    // place l'élément 'donnees' dans l'élément 'data'
+	    $elt_donnees = $doc->createElement('donnees');
+	    $elt_data->appendChild($elt_donnees);
 	    
-	    foreach ($lesPointsDeLaTrace as $unPoint)
-		{
-		    // crée un élément vide 'point'
-		    $elt_point = $doc->createElement('point');
-		    
-		    // place l'élément 'point' dans l'élément 'lesPointsDeTrace'
-		    $elt_lesPointsDeTrace->appendChild($elt_point);
-		
-		    // crée les éléments enfants de l'élément 'point'
-		    $elt_id         = $doc->createElement('id', $unPoint->getId());
-		    $elt_point->appendChild($elt_id);
-		    
-		    $elt_pseudo     = $doc->createElement('latitude', $unPoint->getLatitude());
-		    $elt_point->appendChild($elt_pseudo);
-		    
-		    $elt_adrMail    = $doc->createElement('longitude', $unPoint->getLongitude());
-		    $elt_point->appendChild($elt_adrMail);
-		    
-		    $elt_numTel     = $doc->createElement('altitude', $unPoint->getAltitude());
-		    $elt_point->appendChild($elt_numTel);
-		    
-		    $elt_niveau     = $doc->createElement('dateHeure', $unPoint->getDateHeure());
-		    $elt_point->appendChild($elt_niveau);
-		    
-		    $elt_dateCreation = $doc->createElement('rythmeCardio', $unPoint->getRythmeCardio());
-		    $elt_point->appendChild($elt_dateCreation);
-		}
+	    // place l'élément 'trace' dans l'élément 'donnees'
+	    $elt_laTrace = $doc->createElement('trace');
+	    $elt_donnees->appendChild($elt_laTrace);
+	    
+	    // crée les éléments enfants de l'élément 'trace'
+	    $elt_id = $doc->createElement('id', $laTrace->getId());
+	    $elt_laTrace->appendChild($elt_id);
+	    
+	    $elt_dateHeureDebut = $doc->createElement('dateHeureDebut', $laTrace->getDateHeureDebut());
+	    $elt_laTrace->appendChild($elt_dateHeureDebut);
+	    
+	    $elt_longitude = $doc->createElement('terminee', $laTrace->getTerminee());
+	    $elt_laTrace->appendChild($elt_longitude);
+	    
+	    $elt_dateHeureFin = $doc->createElement('dateHeureFin', $laTrace->getDateHeureFin());
+	    $elt_laTrace->appendChild($elt_dateHeureFin);
+	    
+	    $elt_idUtilisateur = $doc->createElement('idUtilisateur', $laTrace->getIdUtilisateur());
+	    $elt_laTrace->appendChild($elt_idUtilisateur);
+	    
+	    // traitement des points
+	    if (sizeof($lesPointsDeLaTrace) > 0) {
+	        
+	        // place l'élément 'lesPoints' dans l'élément 'donnees'
+	        $elt_lesPointsDeTrace = $doc->createElement('lesPoints');
+	        $elt_donnees->appendChild($elt_lesPointsDeTrace);
+	        
+	        foreach ($lesPointsDeLaTrace as $unPoint)
+	        {
+	            // crée un élément vide 'point'
+	            $elt_point = $doc->createElement('point');
+	            
+	            // place l'élément 'point' dans l'élément 'lesPointsDeTrace'
+	            $elt_lesPointsDeTrace->appendChild($elt_point);
+	            
+	            // crée les éléments enfants de l'élément 'point'
+	            $elt_id         = $doc->createElement('id', $unPoint->getId());
+	            $elt_point->appendChild($elt_id);
+	            
+	            $elt_pseudo     = $doc->createElement('latitude', $unPoint->getLatitude());
+	            $elt_point->appendChild($elt_pseudo);
+	            
+	            $elt_adrMail    = $doc->createElement('longitude', $unPoint->getLongitude());
+	            $elt_point->appendChild($elt_adrMail);
+	            
+	            $elt_numTel     = $doc->createElement('altitude', $unPoint->getAltitude());
+	            $elt_point->appendChild($elt_numTel);
+	            
+	            $elt_niveau     = $doc->createElement('dateHeure', $unPoint->getDateHeure());
+	            $elt_point->appendChild($elt_niveau);
+	            
+	            $elt_dateCreation = $doc->createElement('rythmeCardio', $unPoint->getRythmeCardio());
+	            $elt_point->appendChild($elt_dateCreation);
+	        }
+	    }
 	}
 	
 	// Mise en forme finale
@@ -170,32 +174,44 @@ function creerFluxXML($msg, $laTrace, $lesPointsDeLaTrace)
 // ================================================================================================
 
 // création du flux JSON en sortie
-function creerFluxJSON($msg, $lesUtilisateurs)
+function creerFluxJSON($msg, $laTrace, $lesPointsDeLaTrace)
 {
-    if (sizeof($lesUtilisateurs) == 0) {
+    if (sizeof($lesPointsDeLaTrace) == 0) {
         // construction de l'élément "data"
         $elt_data = ["reponse" => $msg];
     }
     else {
         // construction d'un tableau contenant les utilisateurs
         $lesObjetsDuTableau = array();
-        foreach ($lesUtilisateurs as $unPoint)
+        
+        // construction de l'élément "lesPoints"
+        $elt_point = ["lesPoints" => $lesObjetsDuTableau];
+        $lesObjetsDuTableau["id"] = $laTrace->getId();
+        $lesObjetsDuTableau["dateHeureDebut"] = $laTrace->getDateHeureDebut();
+        $lesObjetsDuTableau["terminee"] = $laTrace->getTerminee();
+        $lesObjetsDuTableau["dateHeureFin"] = $laTrace->getDateHeureFin();
+        $lesObjetsDuTableau["idUtilisateur"] = $laTrace->getIdUtilisateur();
+        
+        // construction de l'élément "lesPoints"
+        $elt_point = ["trace" => $lesObjetsDuTableau];
+        
+        // vidage du tableau
+        $lesObjetsDuTableau = array();
+        
+        foreach ($lesPointsDeLaTrace as $unPoint)
         {	// crée une ligne dans le tableau
             $unObjetUtilisateur = array();
             $unObjetUtilisateur["id"] = $unPoint->getId();
-            $unObjetUtilisateur["pseudo"] = $unPoint->getPseudo();
-            $unObjetUtilisateur["adrMail"] = $unPoint->getAdrMail();
-            $unObjetUtilisateur["numTel"] = $unPoint->getNumTel();
-            $unObjetUtilisateur["niveau"] = $unPoint->getNiveau();
-            $unObjetUtilisateur["dateCreation"] = $unPoint->getDateCreation();
-            $unObjetUtilisateur["nbTraces"] = $unPoint->getNbTraces();
-            if ($unPoint->getNbTraces() > 0)
-            {   $unObjetUtilisateur["dateDerniereTrace"] = $unPoint->getDateDerniereTrace();
-            }
+            $unObjetUtilisateur["latitude"] = $unPoint->getLatitude();
+            $unObjetUtilisateur["longitude"] = $unPoint->getLongitude();
+            $unObjetUtilisateur["altitude"] = $unPoint->getAltitude();
+            $unObjetUtilisateur["dateheure"] = $unPoint->getDateHeure();
+            $unObjetUtilisateur["rythmeCardio"] = $unPoint->getRythmeCardio();
+            
             $lesObjetsDuTableau[] = $unObjetUtilisateur;
         }
-        // construction de l'élément "lesUtilisateurs"
-        $elt_point = ["lesUtilisateurs" => $lesObjetsDuTableau];
+        // construction de l'élément "lesPoints"
+        $elt_point += ["lesPoints" => $lesObjetsDuTableau];
         
         // construction de l'élément "data"
         $elt_data = ["reponse" => $msg, "donnees" => $elt_point];
