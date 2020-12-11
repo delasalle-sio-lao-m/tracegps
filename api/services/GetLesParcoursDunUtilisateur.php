@@ -262,20 +262,32 @@ function creerFluxJSON($msg, $lesTraces)
     else {
         // construction d'un tableau contenant les utilisateurs
         $lesObjetsDuTableau = array();
-        foreach ($lesTraces as $uneTrace)
-        { // crée une ligne dans le tableau
-            $lesObjetsDuTableau["id"] = $uneTrace->getId();
-            $lesObjetsDuTableau["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
-            $lesObjetsDuTableau["terminee"] = $uneTrace->getTerminee();
-            $lesObjetsDuTableau["distance"] = $uneTrace->getDistanceTotale();
-            $lesObjetsDuTableau["idUtilisateur"] = $uneTrace->getIdUtilisateur();
+        
+        foreach ($lesTraces as $uneTrace)   
+        { 
+            if ($uneTrace->getTerminee() < 0)
+            {   
+                // crée une ligne dans le tableau
+                $unObjetTrace["id"] = $uneTrace->getId();
+                $unObjetTrace["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
+                $unObjetTrace["terminee"] = 0;
+                $unObjetTrace["distance"] = $uneTrace->getDistanceTotale();
+                $unObjetTrace["idUtilisateur"] = $uneTrace->getIdUtilisateur();
             }
-            if ($uneTrace->getNbTraces() > 0)
-            {   $lesObjetsDuTableau["dateHeureFin"] = $uneTrace->getDateDerniereTrace();
+            else
+            {
+                $unObjetTrace["id"] = $uneTrace->getId();
+                $unObjetTrace["dateHeureDebut"] = $uneTrace->getDateHeureDebut();
+                $unObjetTrace["terminee"] = $uneTrace->getTerminee();
+                $unObjetTrace["dateHeureFin"] = $uneTrace->getDateHeureFin();
+                $unObjetTrace["distance"] = $uneTrace->getDistanceTotale();
+                $unObjetTrace["idUtilisateur"] = $uneTrace->getIdUtilisateur();
             }
             
-            $lesObjetsDuTableau[] = $uneTrace;
-        
+            $lesObjetsDuTableau[] = $unObjetTrace;
+        }
+          
+
         // construction de l'élément "lesUtilisateurs"
         $elt_trace = ["lesTraces" => $lesObjetsDuTableau];
         

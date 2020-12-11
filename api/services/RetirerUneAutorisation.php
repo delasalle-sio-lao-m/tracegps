@@ -141,7 +141,18 @@ exit;
 
 // création du flux XML en sortie
 function creerFluxXML($msg)
-{	// crée une instance de DOMdocument (DOM : Document Object Model)
+{	
+    /*  
+     * Exemple de code XML
+       <?xml version="1.0" encoding="UTF-8"?>
+       <!--Service web RetirerUneAutorisation - BTS SIO - Lycée De La Salle - Rennes-->
+       <data>
+         <reponse>............. (message retourné par le service web) ...............</reponse>
+       </data>
+     */
+    
+    
+    // crée une instance de DOMdocument (DOM : Document Object Model)
     $doc = new DOMDocument();
     
     // specifie la version et le type d'encodage
