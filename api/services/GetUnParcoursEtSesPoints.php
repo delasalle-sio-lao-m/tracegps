@@ -26,7 +26,7 @@ if ($this->getMethodeRequete() != "GET") {
 }
 else {
     // Les paramètres doivent être présents
-    if ( $pseudo == "" || $mdp == "" ) {
+    if ( $pseudo == "" || $mdp == "" || $idTrace == "") {
         $msg = "Erreur : données incomplètes.";
         $code_reponse = 400;
     }
@@ -36,24 +36,26 @@ else {
             $code_reponse = 400;
         }
         else {
-                $uneTrace = $dao->getUneTrace($idTrace);
-                if ( $uneTrace == null ) {
-                    $msg = "Erreur : parcours inexistant.";
-                    $code_reponse = 400;
+            $uneTrace = $dao->getUneTrace($idTrace);
+            if ( $uneTrace == null ) {
+                $msg = "Erreur : parcours inexistant.";
+                $code_reponse = 400;
+            }
+            else {
+                $idAutorisant = $uneTrace->getIdUtilisateur();
+                $idAutorise = $dao->getUnUtilisateur($pseudo)->getId();
+                $ok = $dao->autoriseAConsulter($idAutorisant, $idAutorise);
+                if ($ok == False){
+                    $msg =  "Erreur : vous n'êtes pas autorisé par le propriétaire du parcours";
+                    $code_reponse = 401;
                 }
                 else {
-                        $unPoint = $dao->getLesUtilisateursAutorises($pseudo);
-                        if ($unPoint != null){
-                            $msg =  "Erreur : vous n'êtes pas autorisé par le propriétaire du parcours";
-                            $code_reponse = 401;
-                        }
-                        else {
-                    	    $laTrace = $dao->getUneTrace($idTrace);
-                    	    $lesPointsDeLaTrace = $dao->getLesPointsDeTrace($idTrace);
-                    	    $msg = "Données de la trace demandée.";
-                    	    $code_reponse = 200;
-                        }
+            	    $laTrace = $dao->getUneTrace($idTrace);
+            	    $lesPointsDeLaTrace = $dao->getLesPointsDeTrace($idTrace);
+            	    $msg = "Données de la trace demandée.";
+            	    $code_reponse = 200;
                 }
+            }
         }
     }
 }
