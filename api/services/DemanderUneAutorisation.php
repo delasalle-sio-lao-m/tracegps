@@ -29,10 +29,13 @@ $texteMessage = ( empty($this->request['texteMessage'])) ? "" : $this->request['
 $nomPrenom = ( empty($this->request['nomPrenom'])) ? "" : $this->request['nomPrenom'];
 $lang = ( empty($this->request['lang'])) ? "" : $this->request['lang'];
 
+// "xml" par défaut si le paramètre lang est absent ou incorrect
+if ($lang != "json") $lang = "xml";
+
 // La méthode HTTP utilisée doit être GET
 if ($this->getMethodeRequete() != "GET")
 {	$msg = "Erreur : méthode HTTP incorrecte.";
-$code_reponse = 406;
+    $code_reponse = 406;
 }
 else {
     // Les paramètres doivent être présents et corrects
@@ -118,7 +121,7 @@ function creerFluxXML($msg)
     /*
      * Exemple de code XML
      <?xml version="1.0" encoding="UTF-8"?>
-     <!--Service web DemanderUneAutorisation - BTS SIO - Lycée De La Salle - Rennes-->
+     <!--Service web RetirerUneAutorisation - BTS SIO - Lycée De La Salle - Rennes-->
      <data>
      <reponse>............. (message retourné par le service web) ...............</reponse>
      </data>
@@ -133,7 +136,7 @@ function creerFluxXML($msg)
     $doc->encoding = 'UTF-8';
     
     // crée un commentaire et l'encode en UTF-8
-    $elt_commentaire = $doc->createComment('Service web DemanderUneAutorisation - BTS SIO - Lycée De La Salle - Rennes');
+    $elt_commentaire = $doc->createComment('Service web RetirerUneAutorisation - BTS SIO - Lycée De La Salle - Rennes');
     // place ce commentaire à la racine du document XML
     $doc->appendChild($elt_commentaire);
     
