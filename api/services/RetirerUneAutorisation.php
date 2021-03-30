@@ -82,7 +82,7 @@ else
                     {     
                         if($texteMessage == "")
                         {
-                            $msg = "Autorisation supprimée.<br>";
+                            $msg = "Autorisation supprimée.";
                             $code_reponse = 200;
                         }
                         else
@@ -106,7 +106,7 @@ else
                             
                             else 
                             {
-                                $msg = "Autorisation enregistrée ". $pseudoARetirer . " va recevoir un courriel de notification.";
+                                $msg = "Autorisation supprimée ". $pseudoARetirer . " va recevoir un courriel de notification.";
                                 $code_reponse = 200;
                             }
                         }
