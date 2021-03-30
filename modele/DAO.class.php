@@ -432,7 +432,8 @@ class DAO
         
         
         // traitement de la réponse
-        if ( ! $uneLigne) {
+        if ( ! $uneLigne) 
+        {
             return null;
         }
         else {

@@ -175,15 +175,14 @@ function creerFluxJSON($msg, $uneTrace)
         $elt_data = ["reponse" => $msg, "donnees" => $elt_idTrace];
         
         
-        
         $elt_dateHeureDebut = ["uneDateHeureDebut" => $uneTrace->getDateHeureDebut()];
-        $elt_data->appendChild($elt_dateHeureDebut);
+        $elt_data = ["reponse" => $msg, "donnees" => $elt_dateHeureDebut];
         
         $elt_terminee = ["terminee"=> $uneTrace->getTerminee()];
-        $elt_data->appendChild($elt_terminee);
+        $elt_data = ["reponse" => $msg, "donnees" => $elt_terminee];
         
         $elt_idUtilisateur = ["idUtilisateur"=> $uneTrace->getIdUtilisateur()];
-        $elt_data->appendChild($elt_idUtilisateur);
+        $elt_data = ["reponse" => $msg, "donnees" => $elt_idUtilisateur];
         
         
     }
@@ -193,6 +192,8 @@ function creerFluxJSON($msg, $uneTrace)
     // construction de l'élément "data"
     // construction de la racine
     $elt_racine = ["data" => $elt_data];
+    
+    
     
     // retourne le contenu JSON (l'option JSON_PRETTY_PRINT gère les sauts de ligne et l'indentation)
     return json_encode($elt_racine, JSON_PRETTY_PRINT);

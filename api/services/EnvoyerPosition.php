@@ -16,7 +16,6 @@
 
 // connexion du serveur web à la base MySQL
 $dao = new DAO();
-
 // Récupération des données transmises
 $pseudo = ( empty($this->request['pseudo'])) ? "" : $this->request['pseudo'];
 
@@ -71,7 +70,7 @@ else {
 
     				else {
     				    $nbPoint = $uneTrace->getNombrePoints();
-    				    $uneDateHeure = date('Y-m-d H:i:s', time()); 
+    				    $uneDateHeure = $dateHeure; 
     				    $unTempsCumule = 0;
     				    $uneDistanceCumulee = 0;
     				    $uneVitesse = 0;
